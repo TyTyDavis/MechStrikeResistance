@@ -1,3 +1,5 @@
+import os
+
 import tcod
 from input_handler import handle_keys
 from game_messages import MessageLog, Message
@@ -5,6 +7,11 @@ from game_states import GameStates
 from map_objects.game_map import GameMap
 from render_functions import clear_all, render_all
 from entity import Entity, get_blocking_entities_at_location
+
+
+directory = os.path.dirname(__file__)
+font_file = os.path.join(directory, 'static/cp437_16x16.png')
+
 
 def main():
 
@@ -42,7 +49,7 @@ def main():
 	player = Entity(0, 0, '@', tcod.white, 'Player', blocks=True)
 	
 	entities = [player]
-	tcod.console_set_custom_font(r'''''', tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_TCOD)
+	tcod.console_set_custom_font(font_file, tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_TCOD)
 	tcod.console_init_root(screen_width, screen_height, 'space game', False)
 
 	con = tcod.console_new(screen_width, screen_height)
