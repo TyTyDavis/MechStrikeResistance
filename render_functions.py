@@ -6,6 +6,19 @@ class RenderOrder(Enum):
 	PLAYER = 1
 	ITEM = 2
 	BUILDING = 3
+
+class Characters(Enum):
+	SMILEY = tcod.tileset.CHARMAP_CP437[1]
+	FILLED_SMILEY = tcod.tileset.CHARMAP_CP437[2]
+	HEART = tcod.tileset.CHARMAP_CP437[3]
+	DIAMOND = tcod.tileset.CHARMAP_CP437[4]
+
+	DOT = tcod.tileset.CHARMAP_CP437[7]
+	RIGHT = tcod.tileset.CHARMAP_CP437[16]
+	LEFT = tcod.tileset.CHARMAP_CP437[17]
+	UP = tcod.tileset.CHARMAP_CP437[30]
+	DOWN = tcod.tileset.CHARMAP_CP437 [31]
+
 	
 def render_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_color):
 	bar_width = int(float(value) / maximum * total_width)
@@ -55,7 +68,13 @@ def clear_all(con, entities):
 		
 def draw_entity(con, entity):
 	tcod.console_set_default_foreground(con, entity.color)
-	tcod.console_put_char(con, entity.x, entity.y, entity.char, tcod.BKGND_NONE)
+	if entity.size == 1:
+		tcod.console_put_char(con, entity.x, entity.y, entity.char, tcod.BKGND_NONE)
+	elif entity.size == 3:
+		for x in range(entity.x, entity.x+3):
+			for y in range(entity.y, entity.y+3):
+				tcod.console_put_char(con, x, y, entity.char, tcod.BKGND_NONE)
+
 		
 def clear_entity(con, entity):
 	tcod.console_put_char(con, entity.x, entity.y, ' ', tcod.BKGND_NONE)

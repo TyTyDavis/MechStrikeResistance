@@ -1,15 +1,17 @@
 import tcod
 import math
 
+
 class Entity:
 
-	def __init__(self, x, y, char, color, name, blocks=False):
+	def __init__(self, x, y, char, color, name, size=1, blocks=False):
 		self.x = x
 		self.y = y
 		self.char = char
 		self.color = color
 		self.name = name
 		self.blocks = blocks
+		self.size = size
 	
 	
 	def move(self, dx, dy):
@@ -60,7 +62,15 @@ class Entity:
 	
 def get_blocking_entities_at_location(entities, destination_x, destination_y):
 	for entity in entities:
-		if entity.blocks and entity.x == destination_x and entity.y == destination_y:
-			return entity
+		if entity.size == 1:
+			if entity.blocks and entity.x == destination_x and entity.y == destination_y:
+				return entity
+		elif entity.size == 3:
+			for x in range(entity.x, entity.x+3):
+				for y in range(entity.y, entity.y+3):
+					if entity.blocks and x == destination_x and y == destination_y:
+						return entity
+
+		
 			
 	return None

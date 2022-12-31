@@ -1,5 +1,5 @@
 import tcod
-from entity import Entity
+from entities.entity import Entity
 from map_objects.tile import Tile
 from map_objects.rectangle import Rect
 from random import randint
@@ -31,6 +31,7 @@ class GameMap:
 
 		player.x = new_x
 		player.y = new_y
+
 					
 			
 		rooms.append(new_room)
