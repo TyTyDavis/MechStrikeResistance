@@ -62,15 +62,8 @@ class Entity:
 	
 def get_blocking_entities_at_location(entities, destination_x, destination_y):
 	for entity in entities:
-		if entity.size == 1:
-			if entity.blocks and entity.x == destination_x and entity.y == destination_y:
-				return entity
-		elif entity.size == 3:
-			for x in range(entity.x, entity.x+3):
-				for y in range(entity.y, entity.y+3):
-					if entity.blocks and x == destination_x and y == destination_y:
-						return entity
-
-		
-			
+		for x in range(entity.x, entity.x+entity.size):
+			for y in range(entity.y, entity.y+entity.size):
+				if entity.blocks and x == destination_x and y == destination_y:
+					return entity		
 	return None

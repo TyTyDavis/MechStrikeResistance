@@ -68,12 +68,10 @@ def clear_all(con, entities):
 		
 def draw_entity(con, entity):
 	tcod.console_set_default_foreground(con, entity.color)
-	if entity.size == 1:
-		tcod.console_put_char(con, entity.x, entity.y, entity.char, tcod.BKGND_NONE)
-	elif entity.size == 3:
-		for x in range(entity.x, entity.x+3):
-			for y in range(entity.y, entity.y+3):
-				tcod.console_put_char(con, x, y, entity.char, tcod.BKGND_NONE)
+
+	for x in range(entity.x, entity.x+entity.size):
+		for y in range(entity.y, entity.y+entity.size):
+			tcod.console_put_char(con, x, y, entity.char, tcod.BKGND_NONE)
 
 		
 def clear_entity(con, entity):
