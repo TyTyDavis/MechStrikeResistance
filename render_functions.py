@@ -31,6 +31,8 @@ colors = {
 		'light_ground': tcod.desaturated_blue
 }
 
+CAMERA_MOVE_BORDER = 20
+
 class RenderOrder(Enum):
 	PLAYER = 1
 	ITEM = 2
@@ -49,9 +51,21 @@ class Characters(Enum):
 	DOWN = tcod.tileset.CHARMAP_CP437 [31]
 
 class Camera:
-	def __init__(self, x, y):
+	def __init__(self, x: int, y: int, border: int = CAMERA_MOVE_BORDER):
 		self.x = x
 		self.y = y
+		self.border = border
+
+
+	def update(self, player):
+		if player.x < self.x + self.border:
+			self.x -= 1
+		elif player.x > self.x + map_view_width - self.border:
+			self.x += 1
+		elif player.y < self.y + self.border:
+			self.y -= 1
+		elif player.y > self.y + map_view_height - self.border:
+			self.y += 1
 
 
 def render_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_color):
@@ -107,4 +121,5 @@ def draw_entity(con, entity, camera):
 
 		
 def clear_entity(con, entity, camera):
-	tcod.console_put_char(con, entity.x - camera.x, entity.y - camera.y, ' ', tcod.BKGND_NONE)
+	for coord in entity.coordinates:
+		tcod.console_put_char(con, coord[0] - camera.x, coord[1] - camera.y, " ", tcod.BKGND_NONE)

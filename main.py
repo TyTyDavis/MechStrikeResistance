@@ -73,7 +73,7 @@ def main():
 	#game loop
 		tcod.sys_check_for_event(tcod.EVENT_KEY_PRESS, key, mouse)
 
-
+		camera.update(player)
 		render_all(con, panel, entities, game_map, message_log, camera)
 
 
