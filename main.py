@@ -6,7 +6,19 @@ from input_handler import handle_keys
 from game_messages import MessageLog, Message
 from game_states import GameStates
 from map_objects.game_map import GameMap
-from render_functions import clear_all, render_all
+from render_functions import (
+	Camera,
+	clear_all, 
+	render_all,
+	map_view_height, 
+	map_view_width, 
+	panel_height, 
+	panel_width, 
+	screen_height, 
+	screen_width, 
+	panel_x, 
+	panel_y,
+)
 from entities.entity import Entity, get_blocking_entities_at_location
 
 
@@ -15,21 +27,7 @@ font_file = os.path.join(directory, 'static/cp437_16x16.png')
 
 
 def main():
-	map_width = 63
-	map_height = 63
-
-	panel_width = 20
-	panel_height = map_height
-
-	screen_width = map_width + panel_width
-	screen_height = map_height
-
-	panel_x = screen_width - panel_width
-	panel_y = screen_height - panel_height
-
-
-
-	bar_width = 15
+	camera = Camera(63+1, 63+1)
 
 	message_x = 1
 	message_y = 5
@@ -57,11 +55,12 @@ def main():
 
 	con = tcod.console_new(screen_width, screen_height)
 	panel = tcod.console_new(panel_width, panel_height)
-	game_map = GameMap(map_width, map_height)
-	game_map.make_map(map_width, map_height, player, entities)
-
+	game_map = GameMap(map_view_width * 3 , map_view_height * 3)
+	game_map.make_map(map_view_width, map_view_height, player, entities)
+	
 	#test stuff
-	entities.insert(0, Mech(9,9, tcod.lighter_orange, 'Mech'))
+	player.place(63 + 30, 63 + 30)
+	entities.insert(0, Mech(63 + 9, 63+ 9, tcod.lighter_orange, 'Mech'))
 
 	message_log = MessageLog(message_x, message_y, message_width, message_height)
 
@@ -75,12 +74,12 @@ def main():
 		tcod.sys_check_for_event(tcod.EVENT_KEY_PRESS, key, mouse)
 
 
-		render_all(con, panel, entities, game_map, message_log, screen_width, screen_height, bar_width, panel_height, panel_x, panel_y, colors)
+		render_all(con, panel, entities, game_map, message_log, camera)
 
 
 		tcod.console_flush()
 
-		clear_all(con, entities)
+		clear_all(con, entities, camera)
 
 		action = handle_keys(key)
 
@@ -90,6 +89,9 @@ def main():
 		inventory = action.get('inventory')
 
 		if move and game_state == GameStates.PLAYERS_TURN:
+			#
+			print(vars(player))
+			#
 			dx, dy = move
 			destination_x = player.x + dx
 			destination_y = player.y + dy

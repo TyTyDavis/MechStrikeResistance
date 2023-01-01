@@ -1,23 +1,42 @@
+from typing import List
 import tcod
 import math
 
 
 class Entity:
-
-	def __init__(self, x, y, char, color, name, size=1, blocks=False):
-		self.x = x
-		self.y = y
-		self.char = char
+	def __init__(self, x: int, y: int, char: str, color, name: str, size: int =1, blocks: bool = False):
+		self.x: int = x
+		self.y: int = y
+		self.char: str = char
 		self.color = color
-		self.name = name
-		self.blocks = blocks
-		self.size = size
+		self.name: str = name
+		self.blocks: bool = blocks
+		self.size: int = size
+		self.coordinates: List = []
+		
+		self.update_coordinates()
 
+
+	def update_coordinates(self):
+		if self.size == 1:
+			self.coordinates = [(self.x, self.y)]
+		else:
+			self.coordinates = []
+			for x in range(self.x, self.x+self.size):
+				for y in range(self.y, self.y+self.size):
+					self.coordinates.append((x,y))
+
+	def place(self, x, y):
+		self.x, self.y = x, y
+		self.update_coordinates()
+	
 
 	def move(self, dx, dy):
 		#move by a given amount
 		self.x += dx
 		self.y += dy
+		self.update_coordinates()
+	
 
 	def move_towards(self, target_x, target_y, game_map, entities):
 		dx = target_x - self.x
@@ -28,6 +47,7 @@ class Entity:
 
 		if not (game_map.is_blocked(self. x + dx, self.y + dy) or get_blocking_entities_at_location(entities, self.x + dx, self.y + dy)):
 			self.move(dx, dy)
+	
 
 	def move_astar(self, target, entities, game_map):
 		fov = tcod.map_new(game_map.width, game_map.height)
@@ -55,15 +75,16 @@ class Entity:
 				self.move_towards(target.x, target.y, game_map, entities)
 
 			tcod.path_delete(my_path)
+	
+	
 	def distance_to(self, other):
 		dx = other.x - self.x
 		dy = other.y - self.y
 		return math.sqrt(dx ** 2 + dy ** 2)
+	
 
 def get_blocking_entities_at_location(entities, destination_x, destination_y):
 	for entity in entities:
-		for x in range(entity.x, entity.x+entity.size):
-			for y in range(entity.y, entity.y+entity.size):
-				if entity.blocks and x == destination_x and y == destination_y:
-					return entity
+		if (destination_x, destination_y) in entity.coordinates:
+			return entity
 	return None
