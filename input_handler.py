@@ -3,7 +3,7 @@ import tcod
 def handle_keys(key):
 	#movement
 	key_char = chr(key.c)
-	
+
 	if key.vk == tcod.KEY_UP or key_char == 'k':
 		return {'move': (0, -1)}
 	elif key.vk == tcod.KEY_DOWN or key_char == 'j':
@@ -23,13 +23,13 @@ def handle_keys(key):
 
 	elif key_char == 'i':
 		return {'inventory': True}
-		
+
 	#fullscreen
 	if key.vk == tcod.KEY_ENTER and key.lalt:
 		return {'fullscreen': True}
 	#exit
 	elif key.vk == tcod.KEY_ESCAPE:
 		return {'exit': True}
-	
+
 	#no key
 	return {}
