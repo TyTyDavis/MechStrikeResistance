@@ -58,13 +58,13 @@ class Camera:
 
 
 	def update(self, player):
-		if player.x < self.x + self.border:
+		if player.x < self.x + self.border and self.x >= 0:
 			self.x -= 1
-		elif player.x > self.x + map_view_width - self.border:
+		elif player.x > self.x + map_view_width - self.border and self.x <= map_width:
 			self.x += 1
-		elif player.y < self.y + self.border:
+		elif player.y < self.y + self.border and self.y >= 0:
 			self.y -= 1
-		elif player.y > self.y + map_view_height - self.border:
+		elif player.y > self.y + map_view_height - self.border and self.y <= map_height:
 			self.y += 1
 
 
