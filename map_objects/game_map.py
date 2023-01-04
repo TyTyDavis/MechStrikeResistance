@@ -3,6 +3,7 @@ from entities.entity import Entity
 from map_objects.tile import Tile
 from map_objects.rectangle import Rect
 from random import randint
+from statistics import mode
 
 
 map_view_width = 63
@@ -25,6 +26,8 @@ class GameMap:
 		self.width = width
 		self.height = height
 		self.tiles = self.initialize_tiles()
+		self.zoom_tiles = []
+		self.zoomed_out = False
 		
 	def initialize_tiles(self):
 		tiles = [[Tile(False) for y in range(self.height)] for x in range(self.width)]
@@ -41,7 +44,7 @@ class GameMap:
 		h = int(map_height - 1)
 			
 		new_room = Rect(x, y, w, h)
-		#self.create_room(new_room)
+		self.create_room(new_room)
 				
 		(new_x, new_y) = new_room.center()
 
@@ -57,7 +60,7 @@ class GameMap:
 	def create_room(self, room):
 		for x in range(room.x1 + 1, room.x2):
 			for y in range(room.y1 + 1, room.y2):
-				self.tiles[x][y].blocked = False
+				self.tiles[x][y].blocked = True
 				self.tiles[x][y].block_sight = False
 				
 	def create_h_tunnel(self, x1, x2, y):
@@ -96,4 +99,21 @@ class GameMap:
 		
 		return False
 
+	def zoom_tile(self, x, y):
+		tiles = []
+		for xx in range(x, x+3):
+			for yy in range(y, y+3):
+				tiles.append(self.tiles[xx][yy])
 		
+		return mode(tiles)
+
+	def zoom_map(self):
+		if self.zoomed_out:
+			self.zoomed_out == False
+		else:
+			for x in range(0, map_width, 3):
+				for y in range(0, map_height, 3):
+					tile = self.zoom_tile(x, y)
+					self.zoom_tiles[x][y] = tile
+
+

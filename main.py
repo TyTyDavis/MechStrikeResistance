@@ -8,8 +8,7 @@ from game_states import GameStates
 from map_objects.game_map import GameMap
 from render_functions import (
 	Camera,
-	clear_all, 
-	render_all,
+	Render, 
 	map_view_height, 
 	map_view_width, 
 	panel_height, 
@@ -57,9 +56,10 @@ def main():
 	panel = tcod.console_new(panel_width, panel_height)
 	game_map = GameMap(map_view_width * 3 , map_view_height * 3)
 	game_map.make_map(map_view_width, map_view_height, player, entities)
+	render = Render()
 	
 	#test stuff
-	player.place(63 + 30, 63 + 30)
+	player.place(93, 93)
 	entities.insert(0, Mech(63 + 9, 63+ 9, tcod.lighter_orange, 'Mech'))
 
 	message_log = MessageLog(message_x, message_y, message_width, message_height)
@@ -73,25 +73,27 @@ def main():
 	#game loop
 		tcod.sys_check_for_event(tcod.EVENT_KEY_PRESS, key, mouse)
 
-		camera.update(player)
-		render_all(con, panel, entities, game_map, message_log, camera)
+		if not game_map.zoomed_out:
+			camera.update(player)
+		else:
+			camera.x, camera.y = (0,0)
+		render.render_all(con, panel, entities, game_map, message_log, camera)
 
 
 		tcod.console_flush()
 
-		clear_all(con, entities, camera)
+		render.clear_all(con, entities, camera)
 
 		action = handle_keys(key)
 
 		move = action.get('move')
-		exit = action.get('exit')
-		fullscreen = action.get('fullscreen')
+		embark = action.get('embark')
 		inventory = action.get('inventory')
 
+		exit = action.get('exit')
+		fullscreen = action.get('fullscreen')
+
 		if move and game_state == GameStates.PLAYERS_TURN:
-			#
-			print(vars(player))
-			#
 			dx, dy = move
 			destination_x = player.x + dx
 			destination_y = player.y + dy
@@ -104,7 +106,11 @@ def main():
 					fov_recompute = True
 				else:
 					pass
-
+			#
+			print(vars(player))
+			#
+		if embark:
+			game_map.zoomed_out = True
 
 		if inventory:
 			message_log.add_message(Message('Inventory is empty', tcod.white))

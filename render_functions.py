@@ -67,59 +67,65 @@ class Camera:
 		elif player.y > self.y + map_view_height - self.border and self.y <= map_height:
 			self.y += 1
 
+class Render:
+	def __init__(self):
+		self.zoom_factor = 1
 
-def render_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_color):
-	bar_width = int(float(value) / maximum * total_width)
-	tcod.console_set_default_background(panel, back_color)
-	tcod.console_rect(panel, x, y, total_width, 1, False, tcod.BKGND_SCREEN)
-	
-	tcod.console_set_default_background(panel, bar_color)
-	
-	if bar_width > 0:
-		tcod.console_rect(panel, x, y, bar_width, 1, False, tcod.BKGND_SCREEN)
+	def render_bar(self, panel, x, y, total_width, name, value, maximum, bar_color, back_color):
+		bar_width = int(float(value) / maximum * total_width)
+		tcod.console_set_default_background(panel, back_color)
+		tcod.console_rect(panel, x, y, total_width, 1, False, tcod.BKGND_SCREEN)
 		
-	tcod.console_set_default_foreground(panel, tcod.white)
-	tcod.console_print_ex(panel, int(x + total_width / 2), y, tcod.BKGND_NONE, tcod.CENTER, '{0}: {1}/{2}'.format(name, value, maximum))
+		tcod.console_set_default_background(panel, bar_color)
+		
+		if bar_width > 0:
+			tcod.console_rect(panel, x, y, bar_width, 1, False, tcod.BKGND_SCREEN)
+			
+		tcod.console_set_default_foreground(panel, tcod.white)
+		tcod.console_print_ex(panel, int(x + total_width / 2), y, tcod.BKGND_NONE, tcod.CENTER, '{0}: {1}/{2}'.format(name, value, maximum))
 
-def render_all(con, panel, entities, game_map, message_log, camera):
-	for y in range(map_view_height):
-		for x in range(map_view_width):
-			wall = game_map.tiles[camera.x + x][camera.y + y].block_sight	
-			if wall:
-				tcod.console_set_char_background(con, x, y, colors.get('light_wall'), tcod.BKGND_SET)
-			else:
-				tcod.console_set_char_background(con, x, y, colors.get('light_ground'), tcod.BKGND_SET)	
-	for entity in entities:
-		draw_entity(con, entity, camera)
-	
-	tcod.console_blit(con, 0, 0, screen_width, screen_height, 0, 0, 0)
-	
-	#render HUD
-	tcod.console_set_default_background(panel, tcod.black)
-	tcod.console_clear(panel)
-	#print messages one line at a time
-	y = message_log.y
-	for message in message_log.messages:
-		tcod.console_set_default_foreground(panel, message.color)
-		tcod.console_print_ex(panel, message_log.x, y, tcod.BKGND_NONE, tcod.LEFT, message.text)
-		y +=1
+	def render_all(self, con, panel, entities, game_map, message_log, camera):
+		self.zoom_factor = 1
+		if game_map.zoomed_out:
+			self.zoom_factor = 3
+		for y in range(map_view_height):
+			for x in range(map_view_width):
+				wall = game_map.tiles[camera.x + x][camera.y + y].block_sight	
+				if wall:
+					tcod.console_set_char_background(con, int(x/self.zoom_factor), int(y/self.zoom_factor), colors.get('light_wall'), tcod.BKGND_SET)
+				else:
+					tcod.console_set_char_background(con, int(x/self.zoom_factor), int(y/self.zoom_factor), colors.get('light_ground'), tcod.BKGND_SET)	
+		for entity in entities:
+			self.draw_entity(con, entity, camera, game_map)
 		
-	#replace tens with fuel variables
-	render_bar(panel, 1, 1, bar_width, 'FUEL', 10, 10, tcod.light_red, tcod.dark_red)
-	tcod.console_blit(panel, 0, 0, screen_width, panel_height, 0, panel_x, panel_y)
-	
-	
-def clear_all(con, entities, camera):
-	for entity in entities:
-		clear_entity(con, entity, camera)
+		tcod.console_blit(con, 0, 0, screen_width, screen_height, 0, 0, 0)
 		
-def draw_entity(con, entity, camera):
-	tcod.console_set_default_foreground(con, entity.color)
+		#render HUD
+		tcod.console_set_default_background(panel, tcod.black)
+		tcod.console_clear(panel)
+		#print messages one line at a time
+		y = message_log.y
+		for message in message_log.messages:
+			tcod.console_set_default_foreground(panel, message.color)
+			tcod.console_print_ex(panel, message_log.x, y, tcod.BKGND_NONE, tcod.LEFT, message.text)
+			y +=1
+			
+		#replace tens with fuel variables
+		self.render_bar(panel, 1, 1, bar_width, 'FUEL', 10, 10, tcod.light_red, tcod.dark_red)
+		tcod.console_blit(panel, 0, 0, screen_width, panel_height, 0, panel_x, panel_y)
+		
+		
+	def clear_all(self, con, entities, camera):
+		for entity in entities:
+			self.clear_entity(con, entity, camera)
+			
+	def draw_entity(self, con, entity, camera, game_map):
+		tcod.console_set_default_foreground(con, entity.color)
 
-	for coord in entity.coordinates:
-		tcod.console_put_char(con, coord[0] - camera.x, coord[1] - camera.y, entity.char, tcod.BKGND_NONE)
+		for coord in entity.coordinates:
+			tcod.console_put_char(con, int((coord[0] - camera.x)/self.zoom_factor), int((coord[1] - camera.y)/self.zoom_factor), entity.char, tcod.BKGND_NONE)
 
-		
-def clear_entity(con, entity, camera):
-	for coord in entity.coordinates:
-		tcod.console_put_char(con, coord[0] - camera.x, coord[1] - camera.y, " ", tcod.BKGND_NONE)
+			
+	def clear_entity(self, con, entity, camera):
+		for coord in entity.coordinates:
+			tcod.console_put_char(con, int((coord[0] - camera.x)/self.zoom_factor), int((coord[1] - camera.y)/self.zoom_factor), " ", tcod.BKGND_NONE)
