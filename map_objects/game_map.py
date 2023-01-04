@@ -116,4 +116,10 @@ class GameMap:
 					tile = self.zoom_tile(x, y)
 					self.zoom_tiles[x][y] = tile
 
+	def toggle_zoom(self):
+		if self.zoomed_out:
+			self.zoomed_out = False
+		else:
+			self.zoomed_out = True
+
 
