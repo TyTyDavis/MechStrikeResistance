@@ -1,3 +1,4 @@
+from math import floor
 import tcod
 
 from enum import Enum
@@ -57,7 +58,9 @@ class Camera:
 		self.border = border
 
 
-	def update(self, player):
+	def update(self, player, zoomed_out):
+		if zoomed_out:
+			self.x, self.y = (0,0)
 		if player.x < self.x + self.border and self.x >= 0:
 			self.x -= 1
 		elif player.x > self.x + map_view_width - self.border and self.x <= map_width:
@@ -92,11 +95,11 @@ class Render:
 			for x in range(map_view_width):
 				wall = game_map.tiles[camera.x + x][camera.y + y].block_sight	
 				if wall:
-					tcod.console_set_char_background(con, int(x/self.zoom_factor), int(y/self.zoom_factor), colors.get('light_wall'), tcod.BKGND_SET)
+					tcod.console_set_char_background(con, floor(x/self.zoom_factor), floor(y/self.zoom_factor), colors.get('light_wall'), tcod.BKGND_SET)
 				else:
-					tcod.console_set_char_background(con, int(x/self.zoom_factor), int(y/self.zoom_factor), colors.get('light_ground'), tcod.BKGND_SET)	
+					tcod.console_set_char_background(con, floor(x/self.zoom_factor), floor(y/self.zoom_factor), colors.get('light_ground'), tcod.BKGND_SET)	
 		for entity in entities:
-			self.draw_entity(con, entity, camera, game_map)
+			self.draw_entity(con, entity, camera, game_map.zoomed_out)
 		
 		tcod.console_blit(con, 0, 0, screen_width, screen_height, 0, 0, 0)
 		
@@ -114,18 +117,29 @@ class Render:
 		self.render_bar(panel, 1, 1, bar_width, 'FUEL', 10, 10, tcod.light_red, tcod.dark_red)
 		tcod.console_blit(panel, 0, 0, screen_width, panel_height, 0, panel_x, panel_y)
 		
-		
-	def clear_all(self, con, entities, camera):
+	
+	def clear_all(self, con, entities, camera, zoomed_out): #TODO: Something is wrong here if I have to pass zoomed_out. We need a better class structure
 		for entity in entities:
-			self.clear_entity(con, entity, camera)
-			
-	def draw_entity(self, con, entity, camera, game_map):
+			self.clear_entity(con, entity, camera, zoomed_out)
+	
+
+	def entity_coordinate(self, coord: int):
+		return floor((coord - (coord%self.zoom_factor))/self.zoom_factor)
+
+
+	def draw_entity(self, con, entity, camera, zoomed_out):
 		tcod.console_set_default_foreground(con, entity.color)
-
-		for coord in entity.coordinates:
-			tcod.console_put_char(con, int((coord[0] - camera.x)/self.zoom_factor), int((coord[1] - camera.y)/self.zoom_factor), entity.char, tcod.BKGND_NONE)
+		if zoomed_out:
+			tcod.console_put_char(con, floor(entity.x/self.zoom_factor), floor(entity.y/self.zoom_factor), entity.char, tcod.BKGND_NONE)
+		else:
+			for coord in entity.coordinates:
+				tcod.console_put_char(con, self.entity_coordinate((coord[0] - camera.x)), self.entity_coordinate(coord[1] - camera.y), entity.char, tcod.BKGND_NONE)
 
 			
-	def clear_entity(self, con, entity, camera):
-		for coord in entity.coordinates:
-			tcod.console_put_char(con, int((coord[0] - camera.x)/self.zoom_factor), int((coord[1] - camera.y)/self.zoom_factor), " ", tcod.BKGND_NONE)
+	def clear_entity(self, con, entity, camera, zoomed_out):
+		if zoomed_out:
+			tcod.console_put_char(con, floor(entity.x/self.zoom_factor), floor(entity.y/self.zoom_factor), ' ', tcod.BKGND_NONE)
+		else:	
+			for coord in entity.coordinates:
+				tcod.console_put_char(con, self.entity_coordinate(coord[0] - camera.x), self.entity_coordinate(coord[1] - camera.y), " ", tcod.BKGND_NONE)
+
