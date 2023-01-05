@@ -23,6 +23,8 @@ def handle_keys(key):
 
 	elif key_char == 'i':
 		return {'inventory': True}
+	elif key_char == 'e':
+		return {'embark': True}
 
 	#fullscreen
 	if key.vk == tcod.KEY_ENTER and key.lalt:
