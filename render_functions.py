@@ -69,7 +69,7 @@ class Camera:
 			self.y -= 1
 		elif player.y > self.y + map_view_height - self.border and self.y <= map_height:
 			self.y += 1
-
+#TODO: Stop passing game_map object around, just take what you need
 class Render:
 	def __init__(self):
 		self.zoom_factor = 1
