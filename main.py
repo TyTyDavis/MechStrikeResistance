@@ -74,11 +74,10 @@ def main():
 
 	while not tcod.console_is_window_closed():
 	#game loop
-		import pdb; pdb.set_trace()
-		player_position = world.try_component(player, components.Coordinates)
+		player_position = world.player_coordinates()
 		tcod.sys_check_for_event(tcod.EVENT_KEY_PRESS, key, mouse)
 
-		world.camera.update(player_position[0][0], player_position[0][1], world.zoomed_out)
+		world.camera.update(player_position[0], player_position[1], world.zoomed_out)
 
 
 
