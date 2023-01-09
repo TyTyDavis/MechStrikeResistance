@@ -58,16 +58,16 @@ class Camera:
 		self.border = border
 
 
-	def update(self, player, zoomed_out):
+	def update(self, playerx, playery, zoomed_out):
 		if zoomed_out:
 			self.x, self.y = (0,0)
-		if player.x < self.x + self.border and self.x >= 0:
+		if playerx < self.x + self.border and self.x >= 0:
 			self.x -= 1
-		elif player.x > self.x + map_view_width - self.border and self.x <= map_width:
+		elif playerx > self.x + map_view_width - self.border and self.x <= map_width:
 			self.x += 1
-		elif player.y < self.y + self.border and self.y >= 0:
+		elif playery < self.y + self.border and self.y >= 0:
 			self.y -= 1
-		elif player.y > self.y + map_view_height - self.border and self.y <= map_height:
+		elif playery > self.y + map_view_height - self.border and self.y <= map_height:
 			self.y += 1
 #TODO: Stop passing game_map object around, just take what you need
 class Render:
