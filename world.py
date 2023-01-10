@@ -1,13 +1,14 @@
 import esper
-from components import components
+import tcod
 
+from components import components
 from game_messages import MessageLog
 from map_objects.game_map import GameMap
 from render_functions import Camera
 
 class World(esper.World):
     
-    def __init__(self, con):
+    def __init__(self, con, panel):
         super().__init__()
         self.zoomed_out = False
 
@@ -38,6 +39,15 @@ class World(esper.World):
         self.game_map.make_map(self.map_view_width, self.map_view_height)
 
         self.camera = Camera(63+1, 63+1)
+        self.con = con
+        self.panel = panel
+        
+        self.colors = {
+            'dark_wall': tcod.Color(0, 0, 100),
+            'dark_ground': tcod.Color(50, 50, 150),
+            'light_wall': tcod.darkest_blue,
+            'light_ground': tcod.desaturated_blue
+	    }
 
     def player_coordinates(self):
         for player, (player, coordinates) in self.get_components(components.Player, components.Coordinates):

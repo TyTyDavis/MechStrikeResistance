@@ -21,6 +21,7 @@ from components import components
 from entities.entity import Entity, get_blocking_entities_at_location
 from entities import entities
 from processors import processors
+from processors import render_processors
 from world import World
 
 
@@ -41,7 +42,10 @@ message_height = 40
 
 LIMIT_FPS = 20
 
-PROCESSORS_LIST = [processors.MovementProcessor]
+PROCESSORS_LIST = [
+	processors.MovementProcessor(), 
+	render_processors.CameraProcessor(), 
+]
 def main(): 
 	tcod.sys_set_fps(LIMIT_FPS)
 
@@ -57,27 +61,29 @@ def main():
 	key = tcod.Key()
 	mouse = tcod.Mouse()
 
-	world = World(con)
+	world = World(con, panel)
 	
 	player = world.create_entity()
-	for component in entities.player(93, 93):
+	for component in entities.player(93, 94):
 		world.add_component(player, component)
 	
 	mech = world.create_entity()
 	for component in entities.mech(63 + 8, 63 + 8):
 		world.add_component(mech, component)
 
-	world.add_processor(processors.ClearProcessor, 100)
+	world.add_processor(render_processors.ClearProcessor(), 100)
 	for processor in PROCESSORS_LIST:
 		world.add_processor(processor)
-	world.add_processor(processors.ZoomedInRenderProcessor,0)
+	world.add_processor(render_processors.MapRenderProcessor(),0)
 
 	while not tcod.console_is_window_closed():
 	#game loop
+		tcod.console_flush()
 		player_position = world.player_coordinates()
 		tcod.sys_check_for_event(tcod.EVENT_KEY_PRESS, key, mouse)
 
-		world.camera.update(player_position[0], player_position[1], world.zoomed_out)
+		world.process()
+
 
 
 

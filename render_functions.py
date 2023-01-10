@@ -143,3 +143,5 @@ class Render:
 			for coord in entity.coordinates:
 				tcod.console_put_char(con, self.entity_coordinate(coord[0] - camera.x), self.entity_coordinate(coord[1] - camera.y), " ", tcod.BKGND_NONE)
 
+
+

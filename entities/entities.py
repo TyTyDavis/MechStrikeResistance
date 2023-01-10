@@ -25,7 +25,7 @@ def player(x, y):
 def mech(x, y):
     return(
         components.EnemyTurn(),
-        components.Coordinates([x, y]),
+        components.Coordinates([(x, y)]),
         components.RenderZoomedIn(simple_mech_design),
         components.RenderZoomedIn((Characters.UP.value,tcod.lighter_orange)),
         components.Description(name='test mech'),
