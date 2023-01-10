@@ -29,7 +29,7 @@ class Size:
 
 
 @component
-class RenderZoomedIn:
+class Render:
     chars: List[tuple]
 
 @component

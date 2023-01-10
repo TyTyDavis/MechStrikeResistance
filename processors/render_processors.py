@@ -82,7 +82,32 @@ class ClearProcessor(Processor):
         zoom_factor = 1
         if self.world.zoomed_out:
             zoom_factor = 3
-        for entity, (coordinates,render) in self.world.get_components(components.Coordinates, components.RenderZoomedIn): 
+        for entity, (coordinates,render) in self.world.get_components(components.Coordinates, components.Render): 
             for coord in coordinates.coordinates:
                 x, y = floor(coord[0]/zoom_factor), floor(coord[1]/zoom_factor)
                 tcod.console_put_char(self.world.con, x, y, " ", tcod.BKGND_NONE)
+
+class EntityRenderProcessor(Processor):
+    def __init__(self):
+        super().__init__()
+
+
+    def process(self):
+        con = self.world.con
+        camera = self.world.camera
+
+        zoom_factor = 1
+        if self.world.zoomed_out:
+            zoom_factor = 3
+
+        
+        for entity, (coordinates, render) in self.world.get_components(components.Coordinates, components.Render):
+            if self.world.zoomed_out:
+                tcod.console_set_default_foreground(con, render.chars[0][1])
+                tcod.console_put_char(con, floor(coordinates[0][0]/zoom_factor), floor(coordinates[0][1]/zoom_factor), render.chars[0][0], tcod.BKGND_NONE)
+            else:
+                for coord in coordinates.coordinates:
+                    tcod.console_set_default_foreground(con, render.chars[0][1])
+                    tcod.console_put_char(con, coord[0] - camera.x, coord[1] - camera.y, render.chars[0][0], tcod.BKGND_NONE)
+
+            
