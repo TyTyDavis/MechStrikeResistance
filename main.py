@@ -31,7 +31,6 @@ message_y = 5
 message_width = 20
 message_height = 40
 
-LIMIT_FPS = 20
 
 PROCESSORS_LIST = [
 	input_processors.InputProcessor(),
@@ -40,7 +39,6 @@ PROCESSORS_LIST = [
 	render_processors.CameraProcessor(), 
 ]
 def main(): 
-	tcod.sys_set_fps(LIMIT_FPS)
 
 	tcod.console_set_custom_font(font_file, tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_ASCII_INROW)
 	tcod.console_init_root(screen_width, screen_height, 'Mech Strike: Resistance', False)
