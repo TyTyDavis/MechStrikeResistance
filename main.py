@@ -48,8 +48,8 @@ def main():
 	#con = tcod.console_new(screen_width, screen_height)
 	#panel = tcod.console_new(panel_width, panel_height)
 	#TODO: Fix this, no hardcoding
-	con = tcod.console_new(63+20, 63)
-	panel = tcod.console_new(20, 63)
+	con = tcod.console.Console(63+20, 63)
+	panel = tcod.console.Console(20, 63)
 
 	key = tcod.Key()
 	mouse = tcod.Mouse()
