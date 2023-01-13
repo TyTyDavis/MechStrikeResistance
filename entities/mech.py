@@ -2,11 +2,6 @@ from enum import Enum
 from entities.entity import Entity
 from render_functions import Characters
 
-class Facing(Enum):
-    NORTH = "N"
-    SOUTH = "S"
-    EAST = "E"
-    WEST = "W"
 
 
 class Mech(Entity):

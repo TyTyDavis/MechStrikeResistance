@@ -1,123 +1,86 @@
 import os
 
 import tcod
-from entities.mech import Mech
 from input_handler import handle_keys
 from game_messages import MessageLog, Message
 from game_states import GameStates
 from map_objects.game_map import GameMap
 from render_functions import (
-	Camera,
-	Render, 
-	map_view_height, 
-	map_view_width, 
-	panel_height, 
-	panel_width, 
 	screen_height, 
 	screen_width, 
-	panel_x, 
-	panel_y,
 )
+from components import components
 from entities.entity import Entity, get_blocking_entities_at_location
+from entities import entities
+from processors import processors, render_processors, input_processors
+from world import World
 
 
 directory = os.path.dirname(__file__)
 font_file = os.path.join(directory, 'static/cp437_16x16.png')
 
-
-def main():
-	camera = Camera(63+1, 63+1)
-
-	message_x = 1
-	message_y = 5
-	message_width = 20
-	message_height = 40
-
-	LIMIT_FPS = 20
-
-	tcod.sys_set_fps(LIMIT_FPS)
-
-
-
-
-	colors = {
+colors = {
 		'dark_wall': tcod.Color(0, 0, 100),
 		'dark_ground': tcod.Color(50, 50, 150),
 		'light_wall': tcod.darkest_blue,
 		'light_ground': tcod.desaturated_blue
 	}
-	player = Entity(0, 0, "@", tcod.white, 'Player', blocks=True)
 
-	entities = [player]
+message_x = 1
+message_y = 5
+message_width = 20
+message_height = 40
+
+LIMIT_FPS = 20
+
+PROCESSORS_LIST = [
+	input_processors.InputProcessor(),
+	processors.PlayerProcessor(),
+	processors.MovementProcessor(), 
+	render_processors.CameraProcessor(), 
+]
+def main(): 
+	tcod.sys_set_fps(LIMIT_FPS)
+
 	tcod.console_set_custom_font(font_file, tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_ASCII_INROW)
 	tcod.console_init_root(screen_width, screen_height, 'Mech Strike: Resistance', False)
 
-	con = tcod.console_new(screen_width, screen_height)
-	panel = tcod.console_new(panel_width, panel_height)
-	game_map = GameMap(map_view_width * 3 , map_view_height * 3)
-	game_map.make_map(map_view_width, map_view_height, player, entities)
-	render = Render()
-	
-	#test stuff
-	player.place(93, 93)
-	entities.insert(0, Mech(63 + 8, 63 + 8, tcod.lighter_orange, 'Mech'))
-
-	message_log = MessageLog(message_x, message_y, message_width, message_height)
+	#con = tcod.console_new(screen_width, screen_height)
+	#panel = tcod.console_new(panel_width, panel_height)
+	#TODO: Fix this, no hardcoding
+	con = tcod.console_new(63+20, 63)
+	panel = tcod.console_new(20, 63)
 
 	key = tcod.Key()
 	mouse = tcod.Mouse()
 
-	game_state = GameStates.PLAYERS_TURN
+	world = World(con, panel)
+	
+	mech = world.create_entity()
+	for component in entities.mech(63 + 8, 63 + 8):
+		world.add_component(mech, component)
+
+	player = world.create_entity()
+	for component in entities.player(93, 94):
+		world.add_component(player, component)
+	
+
+	world.add_processor(render_processors.ClearProcessor(), 0)
+	for processor in PROCESSORS_LIST:
+		world.add_processor(processor)
+	world.add_processor(render_processors.MapRenderProcessor(),1)
+	world.add_processor(render_processors.EntityRenderProcessor(), 100)
 
 	while not tcod.console_is_window_closed():
 	#game loop
+		tcod.console_flush()
+		player_position = world.player_coordinates()
 		tcod.sys_check_for_event(tcod.EVENT_KEY_PRESS, key, mouse)
 
-		camera.update(player, game_map.zoomed_out)
-
-		render.render_all(con, panel, entities, game_map, message_log, camera)
+		world.process()
 
 
-		tcod.console_flush()
 
-		render.clear_all(con, entities, camera, game_map.zoomed_out)
-
-		action = handle_keys(key)
-
-		move = action.get('move')
-		embark = action.get('embark')
-		inventory = action.get('inventory')
-
-		exit = action.get('exit')
-		fullscreen = action.get('fullscreen')
-
-		if move and game_state == GameStates.PLAYERS_TURN:
-			dx, dy = move
-			destination_x = player.x + dx
-			destination_y = player.y + dy
-
-			if not game_map.is_blocked(destination_x, destination_y):
-				target = get_blocking_entities_at_location(entities, destination_x, destination_y)
-
-				if isinstance(target, Mech) or not target:
-					player.move(dx, dy)
-					fov_recompute = True
-				else:
-					pass
-			#
-			print(vars(entities[0]))
-			#
-		if embark:
-			game_map.toggle_zoom()
-
-		if inventory:
-			message_log.add_message(Message('Inventory is empty', tcod.white))
-			print(message_log.messages[0].text)
-		if exit:
-			return True
-
-		if fullscreen:
-			tcod.console_set_fullscreen(not tcod.console_is_fullscreen())
 
 
 if __name__ == '__main__':

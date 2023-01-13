@@ -35,7 +35,7 @@ class GameMap:
 		
 		return tiles
 	
-	def make_map(self, map_width, map_height, player, entities):
+	def make_map(self, map_width, map_height):
 		rooms = []
 		num_rooms = 0
 		x = 0
@@ -45,10 +45,6 @@ class GameMap:
 			
 		new_room = Rect(x, y, w, h)
 		self.create_room(new_room)
-				
-		(new_x, new_y) = new_room.center()
-
-		player.place(new_x, new_y)
 
 					
 			
