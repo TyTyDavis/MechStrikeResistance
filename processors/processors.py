@@ -8,24 +8,28 @@ class MovementProcessor(Processor):
     def __init__(self):
         super().__init__()
 
+    def move_coordinates(self, coordinates, velocityx, velocityy):
+        new_coords = []
+        for coord in coordinates:
+            new_coords.append((coord[0] + velocityx, coord[1] + velocityy))
+        return new_coords
+
     def process(self):
         for ent, (velocity, coordinates) in self.world.get_components(components.Velocity, components.Coordinates):
             if velocity.x or velocity.y:
-                for coord in coordinates:
-                    coord[0] += velocity.x
-                    coord[1] += velocity.y
+                #import pdb; pdb.set_trace()
+                coordinates.coordinates = self.move_coordinates(coordinates.coordinates, velocity.x, velocity.y)
+                print(coordinates)
 
-class ZoomedInRenderProcessor(Processor):
+
+class PlayerProcessor(Processor):
     def __init__(self):
         super().__init__()
-
     def process(self):
-        for entity, (coordinates,render) in self.world.get_components(components.Coordinates, components.RenderZoomedIn): 
-            for coord in coordinates:
-                tcod.console_put_char(
-                    self.con, 
-                    floor(coord[0]/self.zoom_factor), 
-                    floor(coord[1]/self.zoom_factor), 
-                    render.chars[0][0], 
-                    tcod.BKGND_NONE
-                )
+        for ent, (velocity, _) in self.world.get_components(components.Velocity, components.Player):
+            if move := self.world.action.get("move"):
+                velocity.x = move[0]
+                velocity.y = move[1]
+            else:
+                velocity.x = 0
+                velocity.y = 0

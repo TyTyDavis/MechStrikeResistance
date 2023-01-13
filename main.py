@@ -20,8 +20,7 @@ from render_functions import (
 from components import components
 from entities.entity import Entity, get_blocking_entities_at_location
 from entities import entities
-from processors import processors
-from processors import render_processors
+from processors import processors, render_processors, input_processors
 from world import World
 
 
@@ -43,6 +42,8 @@ message_height = 40
 LIMIT_FPS = 20
 
 PROCESSORS_LIST = [
+	input_processors.InputProcessor(),
+	processors.PlayerProcessor(),
 	processors.MovementProcessor(), 
 	render_processors.CameraProcessor(), 
 ]
@@ -63,19 +64,20 @@ def main():
 
 	world = World(con, panel)
 	
+	mech = world.create_entity()
+	for component in entities.mech(63 + 8, 63 + 8):
+		world.add_component(mech, component)
+		
 	player = world.create_entity()
 	for component in entities.player(93, 94):
 		world.add_component(player, component)
 	
-	mech = world.create_entity()
-	for component in entities.mech(63 + 8, 63 + 8):
-		world.add_component(mech, component)
 
-	world.add_processor(render_processors.ClearProcessor(), 100)
+	world.add_processor(render_processors.ClearProcessor(), 0)
 	for processor in PROCESSORS_LIST:
 		world.add_processor(processor)
 	world.add_processor(render_processors.MapRenderProcessor(),1)
-	world.add_processor(render_processors.EntityRenderProcessor(),0)
+	world.add_processor(render_processors.EntityRenderProcessor(), 100)
 
 	while not tcod.console_is_window_closed():
 	#game loop

@@ -48,6 +48,7 @@ class World(esper.World):
             'light_wall': tcod.darkest_blue,
             'light_ground': tcod.desaturated_blue
 	    }
+        self.action = {}
 
     def player_coordinates(self):
         for player, (player, coordinates) in self.get_components(components.Player, components.Coordinates):
