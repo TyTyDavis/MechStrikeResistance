@@ -90,11 +90,13 @@ class ClearProcessor(Processor):
         for entity, (coordinates, render) in self.world.get_components(components.Coordinates, components.Render):
             if self.world.zoomed_out:
                 tcod.console_set_default_foreground(con, render.chars[0][1])
-                tcod.console_put_char(con, floor(coordinates[0][0]/zoom_factor), floor(coordinates[0][1]/zoom_factor)," ", tcod.BKGND_NONE)
+                tcod.console_put_char(con, floor(coordinates.coordinates[0][0]/zoom_factor), floor(coordinates.coordinates[0][1]/zoom_factor)," ", tcod.BKGND_NONE)
             else:
                 for coord in coordinates.coordinates:
                     tcod.console_set_default_foreground(con, render.chars[0][1])
                     tcod.console_put_char(con, coord[0] - camera.x, coord[1] - camera.y, " ", tcod.BKGND_NONE)
+
+
 class EntityRenderProcessor(Processor):
     def __init__(self):
         super().__init__()
@@ -108,14 +110,14 @@ class EntityRenderProcessor(Processor):
         if self.world.zoomed_out:
             zoom_factor = 3
 
-        
-        for entity, (coordinates, render) in self.world.get_components(components.Coordinates, components.Render):
-            if self.world.zoomed_out:
-                tcod.console_set_default_foreground(con, render.chars[0][1])
-                tcod.console_put_char(con, floor(coordinates[0][0]/zoom_factor), floor(coordinates[0][1]/zoom_factor), render.chars[0][0], tcod.BKGND_NONE)
-            else:
+        if self.world.zoomed_out:
+            for entity, (coordinates, render) in self.world.get_components(components.Coordinates, components.RenderZoomedOut):
+                tcod.console_set_default_foreground(con, render.char[1])
+                tcod.console_put_char(con, floor(coordinates.coordinates[0][0]/zoom_factor), floor(coordinates.coordinates[0][1]/zoom_factor), render.char[0], tcod.BKGND_NONE)
+        else:
+            for entity, (coordinates, render) in self.world.get_components(components.Coordinates, components.Render):
                 for coord in coordinates.coordinates:
                     tcod.console_set_default_foreground(con, render.chars[0][1])
                     tcod.console_put_char(con, coord[0] - camera.x, coord[1] - camera.y, render.chars[0][0], tcod.BKGND_NONE)
 
-            
+                

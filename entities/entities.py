@@ -17,6 +17,7 @@ def player(x, y):
         components.Collision(),
         components.Description(name='player'),
         components.Render([("@", tcod.white)]),
+        components.RenderZoomedOut(("@", tcod.white)), #TODO: for debugging
         components.Moves(),
         components.Velocity(),
     )
@@ -30,6 +31,7 @@ def mech(x, y):
             (x, y+2), (x+1, y+2), (x+2, y+2),
         ]),
         components.Render(simple_mech_design),
+        components.RenderZoomedOut((Characters.UP.value,tcod.lighter_orange)),
         components.Description(name='test mech'),
         components.Moves(),
         components.Velocity(),

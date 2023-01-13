@@ -56,11 +56,11 @@ class Camera:
 		self.x = x
 		self.y = y
 		self.border = border
+		self.zoomed_in_x = x
+		self.zoomed_in_y = y
 
 
 	def update(self, playerx, playery, zoomed_out):
-		if zoomed_out:
-			self.x, self.y = (0,0)
 		if playerx < self.x + self.border and self.x >= 0:
 			self.x -= 1
 		elif playerx > self.x + map_view_width - self.border and self.x <= map_width:
@@ -69,6 +69,15 @@ class Camera:
 			self.y -= 1
 		elif playery > self.y + map_view_height - self.border and self.y <= map_height:
 			self.y += 1
+	
+	def toggle_zoom(self, zoom_out):
+		if zoom_out:
+			self.zoomed_in_x = self.x
+			self.zoomed_in_y = self.y
+		else:
+			self.x = self.zoomed_in_x
+			self.y = self.zoomed_in_y
+
 #TODO: Stop passing game_map object around, just take what you need
 class Render:
 	def __init__(self):

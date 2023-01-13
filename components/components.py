@@ -34,7 +34,7 @@ class Render:
 
 @component
 class RenderZoomedOut:
-    chars: tuple
+    char: tuple
 
 class Directions(Enum):
     NORTH = "N"
