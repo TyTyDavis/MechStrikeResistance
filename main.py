@@ -6,16 +6,8 @@ from game_messages import MessageLog, Message
 from game_states import GameStates
 from map_objects.game_map import GameMap
 from render_functions import (
-	Camera,
-	Render, 
-	map_view_height, 
-	map_view_width, 
-	panel_height, 
-	panel_width, 
 	screen_height, 
 	screen_width, 
-	panel_x, 
-	panel_y,
 )
 from components import components
 from entities.entity import Entity, get_blocking_entities_at_location
@@ -67,7 +59,7 @@ def main():
 	mech = world.create_entity()
 	for component in entities.mech(63 + 8, 63 + 8):
 		world.add_component(mech, component)
-		
+
 	player = world.create_entity()
 	for component in entities.player(93, 94):
 		world.add_component(player, component)
