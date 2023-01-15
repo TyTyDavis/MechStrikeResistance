@@ -86,7 +86,7 @@ class ClearProcessor(Processor):
             else:
                 for coord in coordinates.coordinates:
                     tcod.console_set_default_foreground(con, render.chars[0][1])
-                    tcod.console_put_char(con, coord[0] + camera.x, coord[1] + camera.y, " ", tcod.BKGND_NONE)
+                    con.print(x=coord[0] - camera.x, y=coord[1] - camera.y, string=" ")
 
 
 class EntityRenderProcessor(Processor):
@@ -94,7 +94,7 @@ class EntityRenderProcessor(Processor):
         super().__init__()
 
 
-    def process2(self):
+    def process(self):
         con = self.world.con
         camera = self.world.camera
 
@@ -107,16 +107,6 @@ class EntityRenderProcessor(Processor):
                 con.print(x=floor(coordinates.coordinates[0][0]/zoom_factor), y=floor(coordinates.coordinates[0][1]/zoom_factor), ch=render.char[0], bg_blend = 13)
         else:
             for entity, (coordinates, render) in self.world.get_components(components.Coordinates, components.Render):
-                for coord in coordinates.coordinates:
-                    con.set_key_color(color=render.chars[0][1])
-                    con.print(x=coord[0] - camera.x, y=coord[1] - camera.y, string=render.chars[0][0])
-
-    
-    def process(self):
-        con = self.world.con
-        camera = self.world.camera
-
-        for entity, (coordinates, render) in self.world.get_components(components.Coordinates, components.Render):
                 for coord in coordinates.coordinates:
                     con.set_key_color(color=render.chars[0][1])
                     con.print(x=coord[0] - camera.x, y=coord[1] - camera.y, string=render.chars[0][0])

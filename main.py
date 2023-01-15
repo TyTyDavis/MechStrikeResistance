@@ -63,11 +63,11 @@ def main():
 			world.add_component(player, component)
 		
 
-		world.add_processor(render_processors.ClearProcessor(), 0)
+		world.add_processor(render_processors.ClearProcessor(), 100)
 		for processor in PROCESSORS_LIST:
 			world.add_processor(processor)
 		world.add_processor(render_processors.MapRenderProcessor(),1)
-		world.add_processor(render_processors.EntityRenderProcessor(), 100)
+		world.add_processor(render_processors.EntityRenderProcessor(), 0)
 		
 		while True:
 		#game loop
