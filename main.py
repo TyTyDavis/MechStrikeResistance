@@ -4,7 +4,7 @@ import tcod
 from input_handler import handle_keys
 from game_messages import MessageLog, Message
 from game_states import GameStates
-from map_objects.game_map import GameMap
+from map.game_map import GameMap
 from render_functions import (
 	screen_height, 
 	screen_width, 

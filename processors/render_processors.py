@@ -40,17 +40,7 @@ class MapRenderProcessor(Processor):
         panel = self.world.panel
 
         zoom_factor = 1
-        #if self.world.zoomed_out:
-        #    zoom_factor = 3
-        #for y in range(self.world.map_view_height):
-        #    for x in range(self.world.map_view_width):
-        #        wall = self.world.game_map.tiles[camera.x + x][camera.y + y].block_sight	
-        #        if wall:
-        #            tcod.console_set_char_background(con, floor(x/zoom_factor), floor(y/zoom_factor), self.world.colors.get('light_wall'), tcod.BKGND_SET)
-        #        else:
-        #            tcod.console_set_char_background(con, floor(x/zoom_factor), floor(y/zoom_factor), self.world.colors.get('light_ground'), tcod.BKGND_SET)	
-		
-        tcod.console_blit(con, 0, 0, self.world.screen_width, self.world.screen_height, 0, 0, 0)
+        self.world.game_map.render(con)
 		
         #render HUD
         tcod.console_set_default_background(panel, tcod.black)
@@ -103,13 +93,16 @@ class EntityRenderProcessor(Processor):
             zoom_factor = 3
         if self.world.zoomed_out:
             for entity, (coordinates, render) in self.world.get_components(components.Coordinates, components.RenderZoomedOut):
-                con.set_key_color(color=render.char[1])
-                con.print(x=floor(coordinates.coordinates[0][0]/zoom_factor), y=floor(coordinates.coordinates[0][1]/zoom_factor), ch=render.char[0], bg_blend = 13)
+                con.print(
+                    x=floor(coordinates.coordinates[0][0]/zoom_factor), 
+                    y=floor(coordinates.coordinates[0][1]/zoom_factor), 
+                    string=render.char[0], 
+                    fg=render.chars[0][1]
+            )
         else:
             for entity, (coordinates, render) in self.world.get_components(components.Coordinates, components.Render):
                 for coord in coordinates.coordinates:
-                    con.set_key_color(color=render.chars[0][1])
-                    con.print(x=coord[0] - camera.x, y=coord[1] - camera.y, string=render.chars[0][0])
+                    con.print(x=coord[0] - camera.x, y=coord[1] - camera.y, string=render.chars[0][0], fg=render.chars[0][1])
                     
 
                     
