@@ -32,7 +32,7 @@ colors = {
 		'light_ground': tcod.desaturated_blue
 }
 
-CAMERA_MOVE_BORDER = 20
+CAMERA_MOVE_BORDER = 10
 
 class RenderOrder(Enum):
 	PLAYER = 1
@@ -48,7 +48,8 @@ class Characters(Enum):
 	DOT = tcod.tileset.CHARMAP_CP437[7]
 	RIGHT = tcod.tileset.CHARMAP_CP437[16]
 	LEFT = tcod.tileset.CHARMAP_CP437[17]
-	UP = tcod.tileset.CHARMAP_CP437[30]
+	#UP = tcod.tileset.CHARMAP_CP437[30]
+	UP = "^"
 	DOWN = tcod.tileset.CHARMAP_CP437 [31]
 
 class Camera:
@@ -61,13 +62,13 @@ class Camera:
 
 
 	def update(self, playerx, playery, zoomed_out):
-		if playerx < self.x + self.border and self.x >= 0:
+		if playerx < self.x + self.border and self.x > 0:
 			self.x -= 1
-		elif playerx > self.x + map_view_width - self.border and self.x <= map_width:
+		elif playerx > self.x + map_view_width - self.border and self.x + map_view_width < map_width:
 			self.x += 1
-		elif playery < self.y + self.border and self.y >= 0:
+		elif playery < self.y + self.border and self.y > 0:
 			self.y -= 1
-		elif playery > self.y + map_view_height - self.border and self.y <= map_height:
+		elif playery > self.y + map_view_height - self.border and self.y + map_view_height < map_height:
 			self.y += 1
 	
 	def toggle_zoom(self, zoom_out):

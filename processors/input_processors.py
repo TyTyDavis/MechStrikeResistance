@@ -35,7 +35,7 @@ class InputProcessor(Processor):
         self.key_code = {
             Key(vk=tcod.KEY_ENTER, ch="\r"): {"take_stairs": True},
             Key(vk=tcod.KEY_ENTER, ch="\r", alt=True): {"fullscreen": True},
-            Key(vk=tcod.KEY_ESCAPE, ch="\x1b"): {"save_and_exit": True},
+            Key(vk=tcod.KEY_ESCAPE, ch="\x1b"): {"exit": True},
             Key(vk=tcod.KEY_LEFT, shift=True): {"move": (-1, -1)},
             Key(vk=tcod.KEY_RIGHT, shift=True): {"move": (1, -1)},
             Key(vk=tcod.KEY_LEFT, ctrl=True): {"move": (-1, 1)},

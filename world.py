@@ -38,7 +38,7 @@ class World(esper.World):
         self.game_map = GameMap(self.map_view_width * 3 , self.map_view_height * 3)
         self.game_map.make_map(self.map_view_width, self.map_view_height)
 
-        self.camera = Camera(63+1, 63+1)
+        self.camera = Camera(1, 1)
         self.con = con
         self.panel = panel
         
