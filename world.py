@@ -6,6 +6,7 @@ from game_messages import MessageLog
 from map.game_map import GameMap
 from render_functions import Camera
 
+
 class World(esper.World):
     
     def __init__(self, con, panel):

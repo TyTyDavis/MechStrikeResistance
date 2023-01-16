@@ -51,6 +51,9 @@ class Characters(Enum):
 	UP_POINTING_TRIANGLE_POINTING_TRIANGLE = chr(0x25B2)
 	DOWN_POINTING_TRIANGLE = chr(0x25BC)
 
+	LIGHT_SHADE = chr(0x2591)
+	MEDIUM_SHADE = chr(0x2592)
+
 class Camera:
 	def __init__(self, x: int, y: int, border: int = CAMERA_MOVE_BORDER):
 		self.x = x

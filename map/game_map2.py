@@ -1,7 +1,7 @@
 import tcod
 from entities.entity import Entity
-from map_objects.tile import Tile
-from map_objects.rectangle import Rect
+from map.tile import Tile
+from map.rectangle import Rect
 from random import randint
 from statistics import mode
 

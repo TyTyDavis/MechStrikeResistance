@@ -5,7 +5,6 @@ import tcod
 from components import components
 
 
-
 class CameraProcessor(Processor):
     def __init__(self):
         super().__init__()
@@ -40,7 +39,10 @@ class MapRenderProcessor(Processor):
         panel = self.world.panel
 
         zoom_factor = 1
-        self.world.game_map.render(con)
+        if self.world.zoomed_out:
+            pass
+        else:
+            self.world.game_map.render_zoomed_in(con, camera.x, camera.y)
 		
         #render HUD
         tcod.console_set_default_background(panel, tcod.black)
