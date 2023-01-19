@@ -4,7 +4,7 @@ import tcod
 from input_handler import handle_keys
 from game_messages import MessageLog, Message
 from game_states import GameStates
-from map_objects.game_map import GameMap
+from map.game_map import GameMap
 from render_functions import (
 	screen_height, 
 	screen_width, 
@@ -31,7 +31,6 @@ message_y = 5
 message_width = 20
 message_height = 40
 
-LIMIT_FPS = 20
 
 PROCESSORS_LIST = [
 	input_processors.InputProcessor(),
@@ -40,44 +39,53 @@ PROCESSORS_LIST = [
 	render_processors.CameraProcessor(), 
 ]
 def main(): 
-	tcod.sys_set_fps(LIMIT_FPS)
-
-	tcod.console_set_custom_font(font_file, tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_ASCII_INROW)
-	tcod.console_init_root(screen_width, screen_height, 'Mech Strike: Resistance', False)
-
-	#con = tcod.console_new(screen_width, screen_height)
-	#panel = tcod.console_new(panel_width, panel_height)
-	#TODO: Fix this, no hardcoding
-	con = tcod.console_new(63+20, 63)
-	panel = tcod.console_new(20, 63)
-
-	key = tcod.Key()
-	mouse = tcod.Mouse()
-
-	world = World(con, panel)
 	
-	mech = world.create_entity()
-	for component in entities.mech(63 + 8, 63 + 8):
-		world.add_component(mech, component)
+	tileset = tcod.tileset.load_tilesheet(
+        font_file, 16,16, tcod.tileset.CHARMAP_CP437,
+    )
+	with tcod.context.new(  # New window for a console of size columns×rows.
+			columns=screen_width, rows=screen_height, tileset=tileset, title="Mech Strike: Resistance"
+		) as context:
+		#con = tcod.console_new(screen_width, screen_height)
+		#panel = tcod.console_new(panel_width, panel_height)
+		#TODO: Fix this, no hardcoding
+		console = tcod.Console(63, 63, order="F")
+		panel = tcod.Console(20, 63, order="F")
 
-	player = world.create_entity()
-	for component in entities.player(93, 94):
-		world.add_component(player, component)
-	
+		world = World(console, panel)
+		
+		mech = world.create_entity()
+		for component in entities.mech(30, 30):
+			world.add_component(mech, component)
 
-	world.add_processor(render_processors.ClearProcessor(), 0)
-	for processor in PROCESSORS_LIST:
-		world.add_processor(processor)
-	world.add_processor(render_processors.MapRenderProcessor(),1)
-	world.add_processor(render_processors.EntityRenderProcessor(), 100)
+		player = world.create_entity()
+		for component in entities.player(20,20):
+			world.add_component(player, component)
+		
 
-	while not tcod.console_is_window_closed():
-	#game loop
-		tcod.console_flush()
-		player_position = world.player_coordinates()
-		tcod.sys_check_for_event(tcod.EVENT_KEY_PRESS, key, mouse)
+		world.add_processor(render_processors.ClearProcessor(), 100)
+		for processor in PROCESSORS_LIST:
+			world.add_processor(processor)
+		world.add_processor(render_processors.MapRenderProcessor(),1)
+		world.add_processor(render_processors.EntityRenderProcessor(), 0)
+		
+		while True:
+		#game loop
+			console.clear()
+			world.process()
+			
+			player_position = world.player_coordinates()
+			
+			console.print(x=2, y=2, string="player: " + str(player_position))
+			console.print(x=2, y=3, string="camera: " + str((world.camera.x, world.camera.y)))
+			
+			context.present(console)
 
-		world.process()
+			
+
+			for event in tcod.event.wait():
+				if isinstance(event, tcod.event.Quit):
+					raise SystemExit(0)
 
 
 

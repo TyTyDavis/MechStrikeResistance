@@ -4,9 +4,9 @@ from components import components
 from render_functions import Characters
 
 simple_mech_design = [
-    (Characters.UP.value,tcod.lighter_orange), (Characters.UP.value,tcod.lighter_orange), (Characters.UP.value,tcod.lighter_orange),
-    (Characters.UP.value,tcod.lighter_orange), (Characters.UP.value,tcod.lighter_orange), (Characters.UP.value,tcod.lighter_orange),
-    (Characters.UP.value,tcod.lighter_orange), (Characters.UP.value,tcod.lighter_orange), (Characters.UP.value,tcod.lighter_orange),
+    (Characters.UP_POINTING_TRIANGLE_POINTING_TRIANGLE.value,tcod.lighter_orange), (Characters.UP_POINTING_TRIANGLE_POINTING_TRIANGLE.value,tcod.lighter_orange), (Characters.UP_POINTING_TRIANGLE_POINTING_TRIANGLE.value,tcod.lighter_orange),
+    (Characters.UP_POINTING_TRIANGLE_POINTING_TRIANGLE.value,tcod.lighter_orange), (Characters.UP_POINTING_TRIANGLE_POINTING_TRIANGLE.value,tcod.lighter_orange), (Characters.UP_POINTING_TRIANGLE_POINTING_TRIANGLE.value,tcod.lighter_orange),
+    (Characters.UP_POINTING_TRIANGLE_POINTING_TRIANGLE.value,tcod.lighter_orange), (Characters.UP_POINTING_TRIANGLE_POINTING_TRIANGLE.value,tcod.lighter_orange), (Characters.UP_POINTING_TRIANGLE_POINTING_TRIANGLE.value,tcod.lighter_orange),
 ]
 
 def player(x, y):
@@ -31,7 +31,7 @@ def mech(x, y):
             (x, y+2), (x+1, y+2), (x+2, y+2),
         ]),
         components.Render(simple_mech_design),
-        components.RenderZoomedOut((Characters.UP.value,tcod.lighter_orange)),
+        components.RenderZoomedOut((Characters.UP_POINTING_TRIANGLE_POINTING_TRIANGLE.value,tcod.lighter_orange)),
         components.Description(name='test mech'),
         components.Moves(),
         components.Velocity(),

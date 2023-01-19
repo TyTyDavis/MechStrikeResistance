@@ -32,7 +32,7 @@ colors = {
 		'light_ground': tcod.desaturated_blue
 }
 
-CAMERA_MOVE_BORDER = 20
+CAMERA_MOVE_BORDER = 10
 
 class RenderOrder(Enum):
 	PLAYER = 1
@@ -40,16 +40,19 @@ class RenderOrder(Enum):
 	BUILDING = 3
 
 class Characters(Enum):
-	SMILEY = tcod.tileset.CHARMAP_CP437[1]
-	FILLED_SMILEY = tcod.tileset.CHARMAP_CP437[2]
-	HEART = tcod.tileset.CHARMAP_CP437[3]
-	DIAMOND = tcod.tileset.CHARMAP_CP437[4]
+	SMILEY = chr(0x263A)
+	FILLED_SMILEY = chr(0x263B)
+	HEART = chr(0x2665)
+	DIAMOND = chr(0x2666)
 
-	DOT = tcod.tileset.CHARMAP_CP437[7]
-	RIGHT = tcod.tileset.CHARMAP_CP437[16]
-	LEFT = tcod.tileset.CHARMAP_CP437[17]
-	UP = tcod.tileset.CHARMAP_CP437[30]
-	DOWN = tcod.tileset.CHARMAP_CP437 [31]
+	BULLET = chr(0x2022)
+	RIGHT_POINTING_TRIANGLE = chr(0x25BA)
+	LEFT_POINTING_TRIANGLE =chr(0x25C4)
+	UP_POINTING_TRIANGLE_POINTING_TRIANGLE = chr(0x25B2)
+	DOWN_POINTING_TRIANGLE = chr(0x25BC)
+
+	LIGHT_SHADE = chr(0x2591)
+	MEDIUM_SHADE = chr(0x2592)
 
 class Camera:
 	def __init__(self, x: int, y: int, border: int = CAMERA_MOVE_BORDER):
@@ -61,13 +64,13 @@ class Camera:
 
 
 	def update(self, playerx, playery, zoomed_out):
-		if playerx < self.x + self.border and self.x >= 0:
+		if playerx < self.x + self.border and self.x > 0:
 			self.x -= 1
-		elif playerx > self.x + map_view_width - self.border and self.x <= map_width:
+		elif playerx > self.x + map_view_width - self.border and self.x + map_view_width < map_width:
 			self.x += 1
-		elif playery < self.y + self.border and self.y >= 0:
+		elif playery < self.y + self.border and self.y > 0:
 			self.y -= 1
-		elif playery > self.y + map_view_height - self.border and self.y <= map_height:
+		elif playery > self.y + map_view_height - self.border and self.y + map_view_height < map_height:
 			self.y += 1
 	
 	def toggle_zoom(self, zoom_out):

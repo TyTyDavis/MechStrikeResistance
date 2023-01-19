@@ -3,8 +3,9 @@ import tcod
 
 from components import components
 from game_messages import MessageLog
-from map_objects.game_map import GameMap
+from map.game_map import GameMap
 from render_functions import Camera
+
 
 class World(esper.World):
     
@@ -36,9 +37,8 @@ class World(esper.World):
 
         self.message_log = MessageLog(self.message_x, self.message_y, self.message_width, self.message_height)
         self.game_map = GameMap(self.map_view_width * 3 , self.map_view_height * 3)
-        self.game_map.make_map(self.map_view_width, self.map_view_height)
 
-        self.camera = Camera(63+1, 63+1)
+        self.camera = Camera(1, 1)
         self.con = con
         self.panel = panel
         
