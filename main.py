@@ -49,13 +49,13 @@ def main():
 		#con = tcod.console_new(screen_width, screen_height)
 		#panel = tcod.console_new(panel_width, panel_height)
 		#TODO: Fix this, no hardcoding
-		console = tcod.Console(63+20, 63, order="F")
+		console = tcod.Console(63, 63, order="F")
 		panel = tcod.Console(20, 63, order="F")
 
 		world = World(console, panel)
 		
 		mech = world.create_entity()
-		for component in entities.mech(63 + 8, 63 + 8):
+		for component in entities.mech(30, 30):
 			world.add_component(mech, component)
 
 		player = world.create_entity()

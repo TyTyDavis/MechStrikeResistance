@@ -40,6 +40,7 @@ class PlayerProcessor(Processor):
                 self.world.zoomed_out = True
             #TODO: I don't like that the player processor handles this
             # The zoom should be some sort of event that gets sent game-wide
+            self.world.game_map.create_zoomed_out_map()
             self.world.camera.toggle_zoom(self.world.zoomed_out)
 
 class Console(Processor):

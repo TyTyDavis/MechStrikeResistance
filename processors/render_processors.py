@@ -40,7 +40,7 @@ class MapRenderProcessor(Processor):
 
         zoom_factor = 1
         if self.world.zoomed_out:
-            pass
+            self.world.game_map.render_zoomed_out(con)
         else:
             self.world.game_map.render_zoomed_in(con, camera.x, camera.y)
 		
@@ -53,7 +53,6 @@ class MapRenderProcessor(Processor):
         #    tcod.console_set_default_foreground(panel, message.color)
         #    tcod.console_print_ex(panel, self.world.message_log.x, y, tcod.BKGND_NONE, tcod.LEFT, message.text)
         #    y +=1
-            
         #replace tens with fuel variables
         #self.render_bar(panel, 1, 1,self.world.bar_width, '', 10, 10, tcod.light_red, tcod.dark_red)
         #tcod.console_blit(panel, 0, 0, self.world.screen_width, self.world.panel_height, 0, self.world.panel_x, self.world.panel_y)
@@ -99,7 +98,7 @@ class EntityRenderProcessor(Processor):
                     x=floor(coordinates.coordinates[0][0]/zoom_factor), 
                     y=floor(coordinates.coordinates[0][1]/zoom_factor), 
                     string=render.char[0], 
-                    fg=render.chars[0][1]
+                    fg=render.char[1]
             )
         else:
             for entity, (coordinates, render) in self.world.get_components(components.Coordinates, components.Render):
