@@ -21,8 +21,12 @@ class GameMap:
         self.width, self.height = width, height
         self.tiles = numpy.full((width, height), fill_value=tile_types.ground, order="F")
         self.zoomed_out_tiles = numpy.full((floor(self.width/3), floor(self.height/3)), fill_value=tile_types.ground, order="F")
+        
+        self.tiles[29:33, 29] = tile_types.wall
+        self.tiles[29, 29:33] = tile_types.wall
+        self.tiles[33, 29:33] = tile_types.wall
 
-        self.tiles[30:33, 29] = tile_types.wall
+        
 
     def in_bounds(self, x: int, y: int) -> bool:
         """Return True if x and y are inside of the bounds of this map."""
@@ -30,7 +34,7 @@ class GameMap:
 
 
     def average_of_tiles(self, tiles):
-        tile = numpy.where(tiles == tile_types.wall) #not working
+        tile = numpy.where(tiles["tile_type"] > 99) #not working
         if tile[0].size > 0:
             return tiles[tile[0][0], tile[1][0]]
         else:
@@ -42,7 +46,7 @@ class GameMap:
     def create_zoomed_out_map(self):
         for x in range(0,map_width, 3):
             for y in range(0, map_height, 3):
-                tiles = self.tiles[x:x+2, y:y+2]
+                tiles = self.tiles[x:x+3, y:y+3]
                 self.zoomed_out_tiles[floor(x/3), floor(y/3)] = self.average_of_tiles(tiles)
 
 
