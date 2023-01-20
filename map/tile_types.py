@@ -45,7 +45,7 @@ def new_tile(
 
 
 ground = new_tile(
-    walkable=True, transparent=True, graphic=(ord(" "), tcod.black, tcod.darker_green), tile_type=TileTypes.GROUND.value,
+    walkable=True, transparent=True, graphic=(ord("."), tcod.black, tcod.darker_green), tile_type=TileTypes.GROUND.value,
 )
 
 floor = new_tile(
@@ -53,5 +53,5 @@ floor = new_tile(
 )
 
 wall = new_tile(
-    walkable=False, transparent=False, graphic=(ord(" "), tcod.white, tcod.light_grey), tile_type=TileTypes.WALL.value,
+    walkable=False, transparent=False, graphic=(ord(" "), tcod.white, tcod.darker_grey), tile_type=TileTypes.WALL.value,
 )

@@ -102,8 +102,10 @@ class EntityRenderProcessor(Processor):
             )
         else:
             for entity, (coordinates, render) in self.world.get_components(components.Coordinates, components.Render):
+                char_count = 0
                 for coord in coordinates.coordinates:
-                    con.print(x=coord[0] - camera.x, y=coord[1] - camera.y, string=render.chars[0][0], fg=render.chars[0][1])
+                    con.print(x=coord[0] - camera.x, y=coord[1] - camera.y, string=render.chars[char_count][0], fg=render.chars[char_count][1])
+                    char_count += 1
                     
 
                     
