@@ -93,12 +93,12 @@ class EntityRenderProcessor(Processor):
         if self.world.zoomed_out:
             zoom_factor = 3
         if self.world.zoomed_out:
-            for entity, (coordinates, render) in self.world.get_components(components.Coordinates, components.RenderZoomedOut):
+            for entity, (coordinates, render, _) in self.world.get_components(components.Coordinates, components.Render, components.RenderZoomedOut):
                 con.print(
                     x=floor(coordinates.coordinates[0][0]/zoom_factor), 
                     y=floor(coordinates.coordinates[0][1]/zoom_factor), 
-                    string=render.char[0], 
-                    fg=render.char[1]
+                    string=render.chars[4][0], 
+                    fg=render.chars[4][1]
             )
         else:
             for entity, (coordinates, render) in self.world.get_components(components.Coordinates, components.Render):

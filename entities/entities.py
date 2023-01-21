@@ -17,7 +17,6 @@ def player(x, y):
         components.Collision(),
         components.Description(name='player'),
         components.Render([("@", tcod.white)]),
-        components.RenderZoomedOut(("@", tcod.white)), #TODO: for debugging
         components.Moves(),
         components.Velocity(),
         components.Size(1),
@@ -25,7 +24,7 @@ def player(x, y):
 
 def mech(x, y):
     return(
-        components.Mech(facing=components.Directions.WEST.value),
+        components.Mech(facing=components.Directions.SOUTH.value),
         components.EnemyTurn(),
         components.Coordinates([
             (x, y), (x+1, y), (x+2, y),
