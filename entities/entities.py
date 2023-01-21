@@ -1,12 +1,12 @@
 import tcod
 
 from components import components
-from render_functions import Characters
+from characters import Characters
 
 simple_mech_design = [
     (Characters.DIAMOND.value,tcod.blue), (Characters.LOWER_HALF_BLOCK.value,tcod.blue), (Characters.DIAMOND.value,tcod.blue),
     (Characters.LEFT_POINTING_TRIANGLE.value,tcod.blue), (Characters.DOWN_POINTING_TRIANGLE.value,tcod.red), (Characters.RIGHT_POINTING_TRIANGLE.value,tcod.blue),
-    (Characters.RIGHT_HALF_BLOCK.value,tcod.white), (Characters.UPPER_HALF_BLOCK.value,tcod.blue), (Characters.LEFT_HALF_BLOCK.value,tcod.white),
+    (Characters.LEFT_HALF_BLOCK.value,tcod.white), (Characters.UPPER_HALF_BLOCK.value,tcod.white), (Characters.RIGHT_HALF_BLOCK.value,tcod.white),
 ]
 
 def player(x, y):
@@ -20,10 +20,12 @@ def player(x, y):
         components.RenderZoomedOut(("@", tcod.white)), #TODO: for debugging
         components.Moves(),
         components.Velocity(),
+        components.Size(1),
     )
 
 def mech(x, y):
     return(
+        components.Mech(facing=components.Directions.WEST.value),
         components.EnemyTurn(),
         components.Coordinates([
             (x, y), (x+1, y), (x+2, y),
@@ -35,5 +37,6 @@ def mech(x, y):
         components.Description(name='test mech'),
         components.Moves(),
         components.Velocity(),
+        components.Size(3),
 
     )

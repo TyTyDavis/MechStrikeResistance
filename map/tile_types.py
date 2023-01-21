@@ -4,7 +4,7 @@ import numpy
 
 import tcod
 
-from render_functions import Characters
+from characters import Characters
 
 
 class TileTypes(Enum):

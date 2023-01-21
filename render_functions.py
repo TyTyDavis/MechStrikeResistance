@@ -39,28 +39,6 @@ class RenderOrder(Enum):
 	ITEM = 2
 	BUILDING = 3
 
-class Characters(Enum):
-	SMILEY = chr(0x263A)
-	FILLED_SMILEY = chr(0x263B)
-	HEART = chr(0x2665)
-	DIAMOND = chr(0x2666)
-
-	BULLET = chr(0x2022)
-
-	RIGHT_POINTING_TRIANGLE = chr(0x25BA)
-	LEFT_POINTING_TRIANGLE =chr(0x25C4)
-	UP_POINTING_TRIANGLE = chr(0x25B2)
-	DOWN_POINTING_TRIANGLE = chr(0x25BC)
-
-	LOWER_HALF_BLOCK = chr(0x2584)
-	LEFT_HALF_BLOCK = chr(0x258C)
-	RIGHT_HALF_BLOCK = chr(0x2590)
-	UPPER_HALF_BLOCK = chr(0x2580)
-	RECTANGLE = chr(0x25AC)
-
-
-	LIGHT_SHADE = chr(0x2591)
-	MEDIUM_SHADE = chr(0x2592)
 
 class Camera:
 	def __init__(self, x: int, y: int, border: int = CAMERA_MOVE_BORDER):

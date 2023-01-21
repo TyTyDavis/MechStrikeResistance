@@ -17,6 +17,15 @@ class PlayerTurn:
 class EnemyTurn:
     pass
 
+class Directions(Enum):
+    NORTH = "N"
+    SOUTH = "S"
+    EAST = "E"
+    WEST = "W"
+
+@component
+class Mech:
+    facing: str = Directions.SOUTH.value
 
 @component
 class Coordinates:
@@ -35,16 +44,6 @@ class Render:
 @component
 class RenderZoomedOut:
     char: tuple
-
-class Directions(Enum):
-    NORTH = "N"
-    SOUTH = "S"
-    EAST = "E"
-    WEST = "W"
-    
-@component
-class Facing:
-    direction: Directions
 
 @component
 class Collision:

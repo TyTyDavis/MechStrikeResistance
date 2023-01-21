@@ -36,6 +36,7 @@ PROCESSORS_LIST = [
 	input_processors.InputProcessor(),
 	processors.PlayerProcessor(),
 	processors.MovementProcessor(), 
+	processors.MechProcessor(),
 	render_processors.CameraProcessor(), 
 ]
 def main(): 
@@ -66,8 +67,9 @@ def main():
 		world.add_processor(render_processors.ClearProcessor(), 100)
 		for processor in PROCESSORS_LIST:
 			world.add_processor(processor)
-		world.add_processor(render_processors.MapRenderProcessor(),1)
-		world.add_processor(render_processors.EntityRenderProcessor(), 1)
+		world.add_processor(render_processors.MapRenderProcessor(),2)
+		world.add_processor(render_processors.EntityRenderProcessor(), 2)
+		world.add_processor(processors.MechProcessor(),1)
 		
 		while True:
 		#game loop
