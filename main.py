@@ -53,10 +53,12 @@ def main():
 		console = tcod.Console(63, 63, order="F")
 		panel = tcod.Console(20, 63, order="F")
 
+		master_console = tcod.Console(83, 63, order="F")
+
 		world = World(console, panel)
 		
 		mech = world.create_entity()
-		for component in entities.mech(30, 30):
+		for component in entities.mech(27, 27):
 			world.add_component(mech, component)
 
 		player = world.create_entity()
@@ -78,10 +80,12 @@ def main():
 			
 			player_position = world.player_coordinates()
 			
-			console.print(x=2, y=2, string="player: " + str(player_position))
-			console.print(x=2, y=3, string="camera: " + str((world.camera.x, world.camera.y)))
+			#console.print(x=2, y=2, string="player: " + str(player_position))
+			#console.print(x=2, y=3, string="camera: " + str((world.camera.x, world.camera.y)))
+			console.blit(master_console, 0, 0, 0, 0, 63, 63)
+			panel.blit(master_console, 63, 0, 20, 63)
+			context.present(master_console, keep_aspect=True, align=[0.0,0.0])
 			
-			context.present(console)
 
 			
 
