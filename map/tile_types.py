@@ -4,7 +4,8 @@ import numpy
 
 import tcod
 
-from characters import Characters
+from visuals.characters import Characters
+from visuals import colors
 
 
 class TileTypes(Enum):
@@ -45,13 +46,13 @@ def new_tile(
 
 
 ground = new_tile(
-    walkable=True, transparent=True, graphic=(ord("."), tcod.black, tcod.darker_green), tile_type=TileTypes.GROUND.value,
+    walkable=True, transparent=True, graphic=(ord("."), colors.dark_grass, colors.base_grass), tile_type=TileTypes.GROUND.value,
 )
 
 floor = new_tile(
-    walkable=True, transparent=True, graphic=(ord(" "), tcod.white, tcod.black), tile_type=TileTypes.FLOOR.value,
+    walkable=True, transparent=True, graphic=(ord(" "), tcod.white, colors.floor), tile_type=TileTypes.FLOOR.value,
 )
 
 wall = new_tile(
-    walkable=False, transparent=False, graphic=(ord(" "), tcod.white, tcod.darker_grey), tile_type=TileTypes.WALL.value,
+    walkable=False, transparent=False, graphic=(ord(" "), tcod.white, colors.wall), tile_type=TileTypes.WALL.value,
 )

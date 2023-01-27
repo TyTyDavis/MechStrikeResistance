@@ -4,7 +4,7 @@ import sys
 import tcod
 
 from components import components
-from characters import Characters, CHARACTER_MAPPINGS
+from visuals.characters import Characters, CHARACTER_MAPPINGS
 
 class MovementProcessor(Processor):
     def __init__(self):

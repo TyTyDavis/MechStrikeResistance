@@ -1,7 +1,7 @@
 import tcod
 
 from components import components
-from characters import Characters
+from visuals.characters import Characters
 
 simple_mech_design = [
     (Characters.DIAMOND.value,tcod.blue), (Characters.LOWER_HALF_BLOCK.value,tcod.blue), (Characters.DIAMOND.value,tcod.blue),
