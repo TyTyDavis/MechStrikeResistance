@@ -25,34 +25,17 @@ message_y = 5
 message_width = 20
 message_height = 40
 
-colors = {
-		'dark_wall': tcod.Color(0, 0, 100),
-		'dark_ground': tcod.Color(50, 50, 150),
-		'light_wall': tcod.darkest_blue,
-		'light_ground': tcod.desaturated_blue
-}
-
 CAMERA_MOVE_BORDER = 10
 
+
+
+# TODO: Next time this file needs to be added to, we need to move ALL
+#of this logic somewhere else. Maybe render_processors
 class RenderOrder(Enum):
 	PLAYER = 1
 	ITEM = 2
 	BUILDING = 3
 
-class Characters(Enum):
-	SMILEY = chr(0x263A)
-	FILLED_SMILEY = chr(0x263B)
-	HEART = chr(0x2665)
-	DIAMOND = chr(0x2666)
-
-	BULLET = chr(0x2022)
-	RIGHT_POINTING_TRIANGLE = chr(0x25BA)
-	LEFT_POINTING_TRIANGLE =chr(0x25C4)
-	UP_POINTING_TRIANGLE_POINTING_TRIANGLE = chr(0x25B2)
-	DOWN_POINTING_TRIANGLE = chr(0x25BC)
-
-	LIGHT_SHADE = chr(0x2591)
-	MEDIUM_SHADE = chr(0x2592)
 
 class Camera:
 	def __init__(self, x: int, y: int, border: int = CAMERA_MOVE_BORDER):

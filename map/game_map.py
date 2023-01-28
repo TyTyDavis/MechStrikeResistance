@@ -22,9 +22,15 @@ class GameMap:
         self.tiles = numpy.full((width, height), fill_value=tile_types.ground, order="F")
         self.zoomed_out_tiles = numpy.full((floor(self.width/3), floor(self.height/3)), fill_value=tile_types.ground, order="F")
         
-        self.tiles[29:33, 29] = tile_types.wall
-        self.tiles[29, 29:33] = tile_types.wall
-        self.tiles[33, 29:33] = tile_types.wall
+
+        #test environment
+        self.tiles[20:38, 20] = tile_types.wall
+        self.tiles[20, 20:38] = tile_types.wall
+        self.tiles[38, 20:38] = tile_types.wall
+        self.tiles[20:28, 38] = tile_types.wall
+        self.tiles[31:39, 38] = tile_types.wall
+        self.tiles[21:38, 21:38] = tile_types.floor
+        self.tiles[28:31, 38] = tile_types.floor
 
         
 
@@ -34,7 +40,7 @@ class GameMap:
 
 
     def average_of_tiles(self, tiles):
-        tile = numpy.where(tiles["tile_type"] > 99) #not working
+        tile = numpy.where(tiles["tile_type"]== 101)
         if tile[0].size > 0:
             return tiles[tile[0][0], tile[1][0]]
         else:

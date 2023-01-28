@@ -1,6 +1,6 @@
 from dataclasses import dataclass as component
 from enum import Enum
-from typing import List
+from typing import Any, List
 
 
 @component
@@ -19,6 +19,25 @@ class EnemyTurn:
 
 
 @component
+class Inventory:
+    money: int = 0
+
+@component
+class HitPoints:
+    hp: int = 1
+    maxHP: int = 50
+
+class Directions(Enum):
+    NORTH = "N"
+    SOUTH = "S"
+    EAST = "E"
+    WEST = "W"
+
+@component
+class Mech:
+    facing: str = Directions.SOUTH.value
+
+@component
 class Coordinates:
     coordinates: List[tuple]
 
@@ -35,16 +54,6 @@ class Render:
 @component
 class RenderZoomedOut:
     char: tuple
-
-class Directions(Enum):
-    NORTH = "N"
-    SOUTH = "S"
-    EAST = "E"
-    WEST = "W"
-    
-@component
-class Facing:
-    direction: Directions
 
 @component
 class Collision:

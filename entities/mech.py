@@ -1,6 +1,6 @@
 from enum import Enum
 from entities.entity import Entity
-from render_functions import Characters
+from visuals.characters import Characters
 
 
 
