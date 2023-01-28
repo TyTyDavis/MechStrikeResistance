@@ -42,12 +42,6 @@ class World(esper.World):
         self.con = con
         self.panel = panel
         
-        self.colors = {
-            'dark_wall': tcod.Color(0, 0, 100),
-            'dark_ground': tcod.Color(50, 50, 150),
-            'light_wall': tcod.darkest_blue,
-            'light_ground': tcod.desaturated_blue
-	    }
         self.action = {}
 
     def player_coordinates(self):

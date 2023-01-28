@@ -25,15 +25,12 @@ message_y = 5
 message_width = 20
 message_height = 40
 
-colors = {
-		'dark_wall': tcod.Color(0, 0, 100),
-		'dark_ground': tcod.Color(50, 50, 150),
-		'light_wall': tcod.darkest_blue,
-		'light_ground': tcod.desaturated_blue
-}
-
 CAMERA_MOVE_BORDER = 10
 
+
+
+# TODO: Next time this file needs to be added to, we need to move ALL
+#of this logic somewhere else. Maybe render_processors
 class RenderOrder(Enum):
 	PLAYER = 1
 	ITEM = 2

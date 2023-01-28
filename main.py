@@ -6,6 +6,8 @@ from game_messages import MessageLog, Message
 from game_states import GameStates
 from map.game_map import GameMap
 from render_functions import (
+	map_view_width,
+	panel_width,
 	screen_height, 
 	screen_width, 
 )
@@ -19,19 +21,6 @@ from world import World
 directory = os.path.dirname(__file__)
 font_file = os.path.join(directory, 'static/cp437_16x16.png')
 
-colors = {
-		'dark_wall': tcod.Color(0, 0, 100),
-		'dark_ground': tcod.Color(50, 50, 150),
-		'light_wall': tcod.darkest_blue,
-		'light_ground': tcod.desaturated_blue
-	}
-
-message_x = 1
-message_y = 5
-message_width = 20
-message_height = 40
-
-
 PROCESSORS_LIST = [
 	input_processors.InputProcessor(),
 	processors.PlayerProcessor(),
@@ -39,19 +28,17 @@ PROCESSORS_LIST = [
 	processors.MechProcessor(),
 	render_processors.CameraProcessor(), 
 ]
+
 def main(): 
 	
 	tileset = tcod.tileset.load_tilesheet(
         font_file, 16,16, tcod.tileset.CHARMAP_CP437,
     )
-	with tcod.context.new(  # New window for a console of size columns×rows.
+	with tcod.context.new(
 			columns=screen_width, rows=screen_height, tileset=tileset, title="Mech Strike: Resistance"
 		) as context:
-		#con = tcod.console_new(screen_width, screen_height)
-		#panel = tcod.console_new(panel_width, panel_height)
-		#TODO: Fix this, no hardcoding
-		console = tcod.Console(63, 63, order="F")
-		panel = tcod.Console(20, 63, order="F")
+		console = tcod.Console(map_view_width, screen_height, order="F")
+		panel = tcod.Console(panel_width, screen_height, order="F")
 
 		master_console = tcod.Console(83, 63, order="F")
 
