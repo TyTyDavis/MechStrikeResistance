@@ -43,6 +43,8 @@ class PlayerProcessor(Processor):
             # The zoom should be some sort of event that gets sent game-wide
             self.world.game_map.create_zoomed_out_map()
             self.world.camera.toggle_zoom(self.world.zoomed_out)
+        elif self.world.action.get("show_inventory"):
+            self.world.message_log.add_message("Inventory empty")
 
 
 def determine_rendered_facing(chars):

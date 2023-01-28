@@ -3,12 +3,10 @@ from esper import Processor
 import tcod
 
 from components import components
+from visuals import colors
 
 
 class CameraProcessor(Processor):
-    def __init__(self):
-        super().__init__()
-    
     def process(self):
         camera = self.world.camera
         playerx, playery = self.world.player_coordinates()
@@ -16,9 +14,6 @@ class CameraProcessor(Processor):
         camera.update(playerx, playery, self.world.zoomed_out)
 
 class MapRenderProcessor(Processor):
-    def __init__(self):
-        super().__init__()
-
     def render_bar(self, panel, x, y, total_width, name, value, maximum, bar_color, back_color):
         bar_width = int(float(value) / maximum * total_width)
         tcod.console_set_default_background(panel, back_color)
@@ -47,19 +42,43 @@ class MapRenderProcessor(Processor):
         #render HUD
         tcod.console_set_default_background(panel, tcod.black)
         tcod.console_clear(panel)
-        #print messages one line at a time
-        #y = self.world.message_log.y
-        #for message in self.world.message_log.messages:
-        #    tcod.console_set_default_foreground(panel, message.color)
-        #    tcod.console_print_ex(panel, self.world.message_log.x, y, tcod.BKGND_NONE, tcod.LEFT, message.text)
-        #    y +=1
-        #replace tens with fuel variables
-        #self.render_bar(panel, 1, 1,self.world.bar_width, '', 10, 10, tcod.light_red, tcod.dark_red)
-        #tcod.console_blit(panel, 0, 0, self.world.screen_width, self.world.panel_height, 0, self.world.panel_x, self.world.panel_y)
+        
+class HUDProcessor(Processor):
+    def render_bar(self, panel, x, y, total_width, name, value, maximum, bar_color, text_color):
+        bar_width = int(float(value) / maximum * total_width)
+        panel.draw_rect(x=x, y=y, width=bar_width, height=1, ch=1, fg=None, bg=bar_color)
+			
+        value_string = f"{value}/{maximum}"
+        panel.print(x=int(x + total_width - len(value_string)), y=y, string=value_string, fg=text_color)
+        panel.print(x=x, y=y, string=name, fg=text_color)
+    
+    def process(self):
+        panel = self.world.panel
+        
+        for entity, (inventory, hitpoints, player) in self.world.get_components(components.Inventory, components.HitPoints, components.Player):
+            money = inventory.money
+            hp = hitpoints.hp
+            maxHP = hitpoints.maxHP
+
+
+        #UI 
+        panel.draw_frame(x=0, y=31, width=20, height=32, fg=colors.ui_green)
+        
+        #bars
+
+        self.render_bar(panel, 1, 1, 18, "HP", hp, maxHP, tcod.red, tcod.white)
+
+        #text values
+        panel.print(x=1, y=3, string=f"$:{money}", fg=colors.ui_green)  
+
+        #messages
+        y = self.world.message_log.y
+        for message in self.world.message_log.messages:
+            #import pdb; pdb.set_trace()
+            panel.print(x=self.world.message_log.x, y=y, string=message.text, fg=message.color)      
+            y +=1
 
 class ClearProcessor(Processor):
-    def __init__(self):
-        super().__init__()
 
     def process(self):
         con = self.world.con
@@ -81,10 +100,6 @@ class ClearProcessor(Processor):
 
 
 class EntityRenderProcessor(Processor):
-    def __init__(self):
-        super().__init__()
-
-
     def process(self):
         con = self.world.con
         camera = self.world.camera

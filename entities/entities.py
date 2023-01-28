@@ -20,6 +20,8 @@ def player(x, y):
         components.Moves(),
         components.Velocity(),
         components.Size(1),
+        components.Inventory(money=100),
+        components.HitPoints(hp=50, maxHP=50),
     )
 
 def mech(x, y):
@@ -37,5 +39,7 @@ def mech(x, y):
         components.Moves(),
         components.Velocity(),
         components.Size(3),
+        components.Inventory(),
+        components.HitPoints(hp=300, maxHP=300),
 
     )

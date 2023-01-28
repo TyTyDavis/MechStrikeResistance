@@ -31,9 +31,9 @@ class World(esper.World):
         self.bar_width = 15
 
         self.message_x = 1
-        self.message_y = 5
-        self.message_width = 20
-        self.message_height = 40
+        self.message_y = 32
+        self.message_width = 18
+        self.message_height = 30
 
         self.message_log = MessageLog(self.message_x, self.message_y, self.message_width, self.message_height)
         self.game_map = GameMap(self.map_view_width * 3 , self.map_view_height * 3)

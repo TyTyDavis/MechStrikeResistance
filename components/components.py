@@ -1,6 +1,6 @@
 from dataclasses import dataclass as component
 from enum import Enum
-from typing import List
+from typing import Any, List
 
 
 @component
@@ -16,6 +16,16 @@ class PlayerTurn:
 @component
 class EnemyTurn:
     pass
+
+
+@component
+class Inventory:
+    money: int = 0
+
+@component
+class HitPoints:
+    hp: int = 1
+    maxHP: int = 50
 
 class Directions(Enum):
     NORTH = "N"

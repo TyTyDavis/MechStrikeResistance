@@ -1,6 +1,8 @@
+import textwrap
+
 import tcod
 
-import textwrap
+from visuals.characters import Characters
 
 class Message:
 	def __init__(self, text, color=tcod.white):
@@ -15,8 +17,9 @@ class MessageLog:
 		self.width = width
 		self.height = height
 
-	def add_message(self, message):
+	def add_message(self, message_text, color=tcod.white):
 		#split the message if neccesary, among multiple lines
+		message = Message("-" + message_text, color)
 		new_msg_lines = textwrap.wrap(message.text, self.width)
 
 		for line in new_msg_lines:

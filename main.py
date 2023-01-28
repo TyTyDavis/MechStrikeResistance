@@ -27,6 +27,7 @@ PROCESSORS_LIST = [
 	processors.MovementProcessor(), 
 	processors.MechProcessor(),
 	render_processors.CameraProcessor(), 
+	render_processors.HUDProcessor(),
 ]
 
 def main(): 
@@ -60,6 +61,9 @@ def main():
 		world.add_processor(render_processors.EntityRenderProcessor(), 2)
 		world.add_processor(processors.MechProcessor(),1)
 		
+
+		#test stuff
+		world.message_log.add_message("You hear gunfire in the distance")
 		while True:
 		#game loop
 			console.clear()
@@ -70,7 +74,7 @@ def main():
 			#console.print(x=2, y=2, string="player: " + str(player_position))
 			#console.print(x=2, y=3, string="camera: " + str((world.camera.x, world.camera.y)))
 			console.blit(master_console, 0, 0, 0, 0, 63, 63)
-			panel.blit(master_console, 63, 0, 20, 63)
+			panel.blit(master_console, 63, 0, 0, 0)
 			context.present(master_console, keep_aspect=True, align=[0.0,0.0])
 			
 
