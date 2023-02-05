@@ -40,7 +40,7 @@ class GameMap:
 
 
     def average_of_tiles(self, tiles):
-        tile = numpy.where(tiles["tile_type"]== 101)
+        tile = numpy.where(tiles["tile_type"] == 101)
         if tile[0].size > 0:
             return tiles[tile[0][0], tile[1][0]]
         else:

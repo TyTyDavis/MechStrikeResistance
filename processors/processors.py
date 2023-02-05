@@ -17,9 +17,13 @@ class MovementProcessor(Processor):
         return new_coords
 
     def process(self):
-        for ent, (velocity, coordinates) in self.world.get_components(components.Velocity, components.Coordinates):
+        map = self.world.game_map
+        for ent, (velocity, coordinates, collision) in self.world.get_components(components.Velocity, components.Coordinates, components.Collision):
             if velocity.x or velocity.y:
-                coordinates.coordinates = self.move_coordinates(coordinates.coordinates, velocity.x, velocity.y)
+                new_coordinates = self.move_coordinates(coordinates.coordinates, velocity.x, velocity.y)
+                for coord in new_coordinates:
+                    if map.tiles["walkable"][coord[0], coord[1]]:
+                        coordinates.coordinates = new_coordinates
                 velocity.x = 0
                 velocity.y = 0
 

@@ -57,7 +57,7 @@ class RenderZoomedOut:
 
 @component
 class Collision:
-    pass
+    with_mech: bool = True
 
 @component
 class Moves:
