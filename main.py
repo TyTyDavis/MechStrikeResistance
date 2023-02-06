@@ -62,8 +62,6 @@ def main():
 		world.add_processor(processors.MechProcessor(),1)
 		
 
-		#test stuff
-		world.message_log.add_message("You hear gunfire in the distance")
 		while True:
 		#game loop
 			console.clear()
@@ -71,6 +69,7 @@ def main():
 			
 			player_position = world.player_coordinates()
 			
+
 			#console.print(x=2, y=2, string="player: " + str(player_position))
 			#console.print(x=2, y=3, string="camera: " + str((world.camera.x, world.camera.y)))
 			console.blit(master_console, 0, 0, 0, 0, 63, 63)

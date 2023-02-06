@@ -26,7 +26,7 @@ graphic_dt = numpy.dtype(
 # Tile struct used for statically defined tile data.
 tile_dt = numpy.dtype(
     [
-        ("walkable", bool),  # True if this tile can be walked over.
+        ("blocked", bool),  # False if this tile can be walked over.
         ("transparent", bool),  # True if this tile doesn't block FOV.
         ("graphic", graphic_dt),  # Graphics for when this tile is not in FOV.
         ("tile_type", numpy.int_)
@@ -36,23 +36,23 @@ tile_dt = numpy.dtype(
 
 def new_tile(
     *,  # Enforce the use of keywords, so that parameter order doesn't matter.
-    walkable: int,
+    blocked: int,
     transparent: int,
     graphic: Tuple[int, Tuple[int, int, int], Tuple[int, int, int]],
     tile_type: str
 ) -> numpy.ndarray:
     """Helper function for defining individual tile types """
-    return numpy.array((walkable, transparent, graphic, tile_type), dtype=tile_dt)
+    return numpy.array((blocked, transparent, graphic, tile_type), dtype=tile_dt)
 
 
 ground = new_tile(
-    walkable=True, transparent=True, graphic=(ord("."), colors.dark_grass, colors.base_grass), tile_type=TileTypes.GROUND.value,
+    blocked=False, transparent=True, graphic=(ord("."), colors.dark_grass, colors.base_grass), tile_type=TileTypes.GROUND.value,
 )
 
 floor = new_tile(
-    walkable=True, transparent=True, graphic=(ord(" "), tcod.white, colors.floor), tile_type=TileTypes.FLOOR.value,
+    blocked=False, transparent=True, graphic=(ord(" "), tcod.white, colors.floor), tile_type=TileTypes.FLOOR.value,
 )
 
 wall = new_tile(
-    walkable=False, transparent=False, graphic=(ord(" "), tcod.white, colors.wall), tile_type=TileTypes.WALL.value,
+    blocked=True, transparent=False, graphic=(ord(" "), tcod.white, colors.wall), tile_type=TileTypes.WALL.value,
 )

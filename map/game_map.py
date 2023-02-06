@@ -30,7 +30,7 @@ class GameMap:
         self.tiles[20:28, 38] = tile_types.wall
         self.tiles[31:39, 38] = tile_types.wall
         self.tiles[21:38, 21:38] = tile_types.floor
-        self.tiles[28:31, 38] = tile_types.floor
+        self.tiles[27:31, 38] = tile_types.floor
 
         
 

@@ -6,24 +6,38 @@ import tcod
 from components import components
 from visuals.characters import Characters, CHARACTER_MAPPINGS
 
+
+
+def do_coordinates_overlap(coordinates_1, coordinates_2):
+    return bool(set(coordinates_1) & set(coordinates_2))
+
 class MovementProcessor(Processor):
     def __init__(self):
         super().__init__()
 
-    def move_coordinates(self, coordinates, velocityx, velocityy):
+    def move_coordinates(self, raw_coordinates, velocityx, velocityy):
         new_coords = []
-        for coord in coordinates:
+        for coord in raw_coordinates:
             new_coords.append((coord[0] + velocityx, coord[1] + velocityy))
+        for coord in new_coords:
+            if self.world.game_map.tiles["blocked"][coord[0], coord[1]]:
+                return raw_coordinates
         return new_coords
 
     def process(self):
-        map = self.world.game_map
-        for ent, (velocity, coordinates, collision) in self.world.get_components(components.Velocity, components.Coordinates, components.Collision):
+        for ent, (velocity, coordinates, moves) in self.world.get_components(components.Velocity, components.Coordinates, components.Moves):
             if velocity.x or velocity.y:
+                velocity.x, velocity.y = tuple(v * moves.speed for v in (velocity.x, velocity.y))
+                
                 new_coordinates = self.move_coordinates(coordinates.coordinates, velocity.x, velocity.y)
-                for coord in new_coordinates:
-                    if map.tiles["walkable"][coord[0], coord[1]]:
-                        coordinates.coordinates = new_coordinates
+                coordinates.coordinates = new_coordinates
+                
+                if self.world.has_component(ent, components.Player):
+                    if vehicle := self.world.component_for_entity(ent, components.Player).vehicle:
+                        mech_coordinates = self.world.component_for_entity(vehicle, components.Coordinates)
+                        mech_coordinates.coordinates = self.move_coordinates(mech_coordinates.coordinates, velocity.x, velocity.y)
+
+
                 velocity.x = 0
                 velocity.y = 0
 
@@ -31,24 +45,48 @@ class MovementProcessor(Processor):
 class PlayerProcessor(Processor):
     def __init__(self):
         super().__init__()
+    
     def process(self):
-        if move := self.world.action.get("move"):
-            for ent, (velocity, _) in self.world.get_components(components.Velocity, components.Player):
-                    velocity.x = move[0]
-                    velocity.y = move[1]
-        
-        elif self.world.action.get("embark"):
+        for player_ent, (player, player_coordinates) in self.world.get_components(components.Player, components.Coordinates):
+            player.interactables = []
+            for ent, (mech, coordinates) in self.world.get_components(components.Mech, components.Coordinates):
+                if do_coordinates_overlap(player_coordinates.coordinates, coordinates.coordinates):
+                    if not mech.occupied:
+                        player.interactables.append(ent)
+            if move := self.world.action.get("move"):
+                for ent, (velocity, _) in self.world.get_components(components.Velocity, components.Player):
+                        velocity.x = move[0]
+                        velocity.y = move[1]
             
-            if self.world.zoomed_out:
-                self.world.zoomed_out = False
-            else:
-                self.world.zoomed_out = True
-            #TODO: I don't like that the player processor handles this
-            # The zoom should be some sort of event that gets sent game-wide
-            self.world.game_map.create_zoomed_out_map()
-            self.world.camera.toggle_zoom(self.world.zoomed_out)
-        elif self.world.action.get("show_inventory"):
-            self.world.message_log.add_message("Inventory empty")
+            elif self.world.action.get("embark"):
+                for ent, mech in self.world.get_component(components.Mech):
+                    if mech.embarked: #disembark
+                        mech.embarked = False
+                        mech.occupied = False
+                        player.vehicle = None
+                        player_move = self.world.component_for_entity(player_ent, components.Moves)
+                        player_move.speed = 1
+
+                        self.world.zoomed_out = False
+                        self.world.camera.toggle_zoom(self.world.zoomed_out)
+                        player.interactables = []
+                for entity in player.interactables:
+                    if self.world.has_component(ent, components.Mech):
+                        mech = self.world.component_for_entity(ent, components.Mech)
+                        if not mech.occupied: #embark
+                            mech.embarked = True
+                            mech.occupied = True
+                            player.vehicle = entity
+                            player_move = self.world.component_for_entity(player_ent, components.Moves)
+                            player_move.speed = 3
+
+                            self.world.zoomed_out = True
+                            #TODO: I don't like that the player processor handles this
+                            # The zoom should be some sort of event that gets sent game-wide
+                            self.world.game_map.create_zoomed_out_map()
+                            self.world.camera.toggle_zoom(self.world.zoomed_out)
+            elif self.world.action.get("show_inventory"):
+                self.world.message_log.add_message("Inventory empty")
 
 
 def determine_rendered_facing(chars):

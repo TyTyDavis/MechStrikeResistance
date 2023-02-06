@@ -1,11 +1,14 @@
 from dataclasses import dataclass as component
+from dataclasses import field
 from enum import Enum
 from typing import Any, List
 
 
 @component
 class Player:
-    pass
+    interactables: List[int] = field(default_factory=list)
+    vehicle: int | None = None #entity id
+    speed: int = 1
 
 
 @component
@@ -36,6 +39,11 @@ class Directions(Enum):
 @component
 class Mech:
     facing: str = Directions.SOUTH.value
+    name: str | None = None
+    model_name: str = "Mech"
+    embarked: bool = False #is the player in it?
+    occupied: bool = False #is the player OR anyone else in it?
+    
 
 @component
 class Coordinates:
@@ -61,17 +69,12 @@ class Collision:
 
 @component
 class Moves:
-    pass
+    speed: int = 1
 
 @component
 class Velocity:
     x: int = 0
     y: int = 0
-
-@component
-class Embark:
-    embarked: bool = False #is the player in it?
-    occupied: bool = False #is the player OR anyone else in it?
 
 @component
 class Description:
