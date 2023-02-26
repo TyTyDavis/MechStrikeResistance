@@ -39,10 +39,10 @@ class MovementProcessor(Processor):
                 velocity.x, velocity.y = tuple(v * moves.speed for v in (velocity.x, velocity.y))
                 
                 new_coordinates = self.move_coordinates(coordinates.coordinates, velocity.x, velocity.y)
-                #if target := self.get_blocking_entities_at_location(ent, new_coordinates, collision.with_mech):
-                #    self.world.message_log.add_message("Attack!")
-                #else:
-                coordinates.coordinates = new_coordinates
+                if target := self.get_blocking_entities_at_location(ent, new_coordinates, collision.with_mech):
+                    self.world.message_log.add_message("Attack!")
+                else:
+                    coordinates.coordinates = new_coordinates
 
                 if ent == player.vehicle:
                     player_coordinates = self.world.component_for_entity(player_ent, components.Coordinates)
