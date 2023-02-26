@@ -12,6 +12,11 @@ class Player:
 
 
 @component
+class Controlled:
+    pass
+
+
+@component
 class PlayerTurn:
     pass
 

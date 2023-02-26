@@ -15,6 +15,14 @@ class MovementProcessor(Processor):
     def __init__(self):
         super().__init__()
 
+    def get_blocking_entities_at_location(self, actor_ent, actor_coordinates, with_mech):
+        for ent, (coordinates, collision) in self.world.get_components(components.Coordinates, components.Collision):
+            if do_coordinates_overlap(actor_coordinates, coordinates.coordinates) and ent != actor_ent:
+                if with_mech == False and self.world.has_component(ent, components.Mech):
+                    return None
+                return ent
+        return None
+    
     def move_coordinates(self, raw_coordinates, velocityx, velocityy):
         new_coords = []
         for coord in raw_coordinates:
@@ -25,17 +33,15 @@ class MovementProcessor(Processor):
         return new_coords
 
     def process(self):
-        for ent, (velocity, coordinates, moves) in self.world.get_components(components.Velocity, components.Coordinates, components.Moves):
+        for ent, (velocity, coordinates, moves, collision) in self.world.get_components(components.Velocity, components.Coordinates, components.Moves, components.Collision):
             if velocity.x or velocity.y:
                 velocity.x, velocity.y = tuple(v * moves.speed for v in (velocity.x, velocity.y))
                 
                 new_coordinates = self.move_coordinates(coordinates.coordinates, velocity.x, velocity.y)
+                #if target := self.get_blocking_entities_at_location(ent, new_coordinates, collision.with_mech):
+                #    self.world.message_log.add_message("Attack!")
+                #else:
                 coordinates.coordinates = new_coordinates
-                
-                if self.world.has_component(ent, components.Player):
-                    if vehicle := self.world.component_for_entity(ent, components.Player).vehicle:
-                        mech_coordinates = self.world.component_for_entity(vehicle, components.Coordinates)
-                        mech_coordinates.coordinates = self.move_coordinates(mech_coordinates.coordinates, velocity.x, velocity.y)
 
 
                 velocity.x = 0

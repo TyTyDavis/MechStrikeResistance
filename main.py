@@ -52,6 +52,10 @@ def main():
 		player = world.create_entity()
 		for component in entities.player(20,20):
 			world.add_component(player, component)
+
+		test_mech = world.create_entity()
+		for component in entities.mech(27, 42):
+			world.add_component(test_mech, component)
 		
 
 		world.add_processor(render_processors.ClearProcessor(), 100)
