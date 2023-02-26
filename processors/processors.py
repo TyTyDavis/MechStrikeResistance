@@ -6,45 +6,40 @@ import tcod
 from components import components
 from visuals.characters import Characters, CHARACTER_MAPPINGS
 
+
+
+def do_coordinates_overlap(coordinates_1, coordinates_2):
+    return bool(set(coordinates_1) & set(coordinates_2))
+
 class MovementProcessor(Processor):
     def __init__(self):
         super().__init__()
 
-    def move_coordinates(self, coordinates, velocityx, velocityy):
+    def move_coordinates(self, raw_coordinates, velocityx, velocityy):
         new_coords = []
-        for coord in coordinates:
+        for coord in raw_coordinates:
             new_coords.append((coord[0] + velocityx, coord[1] + velocityy))
+        for coord in new_coords:
+            if self.world.game_map.tiles["blocked"][coord[0], coord[1]]:
+                return raw_coordinates
         return new_coords
 
     def process(self):
-        for ent, (velocity, coordinates) in self.world.get_components(components.Velocity, components.Coordinates):
+        for ent, (velocity, coordinates, moves) in self.world.get_components(components.Velocity, components.Coordinates, components.Moves):
             if velocity.x or velocity.y:
-                coordinates.coordinates = self.move_coordinates(coordinates.coordinates, velocity.x, velocity.y)
+                velocity.x, velocity.y = tuple(v * moves.speed for v in (velocity.x, velocity.y))
+                
+                new_coordinates = self.move_coordinates(coordinates.coordinates, velocity.x, velocity.y)
+                coordinates.coordinates = new_coordinates
+                
+                if self.world.has_component(ent, components.Player):
+                    if vehicle := self.world.component_for_entity(ent, components.Player).vehicle:
+                        mech_coordinates = self.world.component_for_entity(vehicle, components.Coordinates)
+                        mech_coordinates.coordinates = self.move_coordinates(mech_coordinates.coordinates, velocity.x, velocity.y)
+
+
                 velocity.x = 0
                 velocity.y = 0
-
-
-class PlayerProcessor(Processor):
-    def __init__(self):
-        super().__init__()
-    def process(self):
-        if move := self.world.action.get("move"):
-            for ent, (velocity, _) in self.world.get_components(components.Velocity, components.Player):
-                    velocity.x = move[0]
-                    velocity.y = move[1]
-        
-        elif self.world.action.get("embark"):
-            
-            if self.world.zoomed_out:
-                self.world.zoomed_out = False
-            else:
-                self.world.zoomed_out = True
-            #TODO: I don't like that the player processor handles this
-            # The zoom should be some sort of event that gets sent game-wide
-            self.world.game_map.create_zoomed_out_map()
-            self.world.camera.toggle_zoom(self.world.zoomed_out)
-        elif self.world.action.get("show_inventory"):
-            self.world.message_log.add_message("Inventory empty")
 
 
 def determine_rendered_facing(chars):
@@ -73,7 +68,7 @@ class MechProcessor(Processor):
         directions = [components.Directions.NORTH.value, components.Directions.EAST.value, components.Directions.SOUTH.value, components.Directions.WEST.value]
         start_index = directions.index(start)
         end_index = directions.index(end)
-        rotations = (start_index - end_index) % 4
+        rotations = (end_index - start_index) % 4
         return rotations
     
     def rotated_mech_render(self, chars, rendered_facing, true_facing):
@@ -102,10 +97,14 @@ class MechProcessor(Processor):
 
     def process(self):
         for ent, (mech, render) in self.world.get_components(components.Mech, components.Render):
+            if mech.embarked:
+                if face := self.world.action.get("face"):
+                    mech.facing = face
+            
             rendered_facing = determine_rendered_facing(render.chars)
             if rendered_facing != mech.facing:
                 render.chars = self.rotated_mech_render(render.chars, rendered_facing, mech.facing)
-
+                
 
 class Console(Processor):
     scene = None

@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from esper import Processor
 import tcod
 
+from components.components import Directions
+
 @dataclass
 class Key:
     vk: int = 65
@@ -57,10 +59,10 @@ class InputProcessor(Processor):
             Key(vk=tcod.KEY_F1): {"next_level": (None, None)},
             Key(vk=tcod.KEY_F5): {"reveal_all": True},
             Key(vk=tcod.KEY_F12): {"screenshot": True},
-            Key(ch="a"): {},
+            Key(ch="a"): {"face": Directions.WEST.value},
             Key(ch="b"): {"move": (-1, 1)},
             Key(ch="c"): {"show_character_screen": True},
-            Key(ch="d"): {"drop_inventory": True},
+            Key(ch="d"): {"face": Directions.EAST.value},
             Key(ch="e"): {"embark": True},
             Key(ch="f"): {},
             Key(ch="g"): {"pickup": True},
@@ -75,11 +77,11 @@ class InputProcessor(Processor):
             Key(ch="p"): {},
             Key(ch="q"): {},
             Key(ch="r"): {},
-            Key(ch="s"): {},
+            Key(ch="s"): {"face": Directions.SOUTH.value},
             Key(ch="t"): {},
             Key(ch="u"): {"move": (1, -1)},
             Key(ch="v"): {},
-            Key(ch="w"): {},
+            Key(ch="w"): {"face": Directions.NORTH.value},
             Key(ch="x"): {},
             Key(ch="y"): {"move": (-1, -1)},
             Key(ch="z"): {},

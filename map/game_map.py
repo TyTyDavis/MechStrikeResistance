@@ -30,7 +30,7 @@ class GameMap:
         self.tiles[20:28, 38] = tile_types.wall
         self.tiles[31:39, 38] = tile_types.wall
         self.tiles[21:38, 21:38] = tile_types.floor
-        self.tiles[28:31, 38] = tile_types.floor
+        self.tiles[27:31, 38] = tile_types.floor
 
         
 
@@ -40,7 +40,7 @@ class GameMap:
 
 
     def average_of_tiles(self, tiles):
-        tile = numpy.where(tiles["tile_type"]== 101)
+        tile = numpy.where(tiles["tile_type"] == 101)
         if tile[0].size > 0:
             return tiles[tile[0][0], tile[1][0]]
         else:

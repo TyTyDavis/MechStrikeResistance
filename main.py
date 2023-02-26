@@ -14,7 +14,7 @@ from render_functions import (
 from components import components
 from entities.entity import Entity, get_blocking_entities_at_location
 from entities import entities
-from processors import processors, render_processors, input_processors
+from processors import processors, render_processors, input_processors, player_processor
 from world import World
 
 
@@ -23,7 +23,7 @@ font_file = os.path.join(directory, 'static/cp437_16x16.png')
 
 PROCESSORS_LIST = [
 	input_processors.InputProcessor(),
-	processors.PlayerProcessor(),
+	player_processor.PlayerProcessor(),
 	processors.MovementProcessor(), 
 	processors.MechProcessor(),
 	render_processors.CameraProcessor(), 
@@ -62,8 +62,6 @@ def main():
 		world.add_processor(processors.MechProcessor(),1)
 		
 
-		#test stuff
-		world.message_log.add_message("You hear gunfire in the distance")
 		while True:
 		#game loop
 			console.clear()
@@ -71,6 +69,7 @@ def main():
 			
 			player_position = world.player_coordinates()
 			
+
 			#console.print(x=2, y=2, string="player: " + str(player_position))
 			#console.print(x=2, y=3, string="camera: " + str((world.camera.x, world.camera.y)))
 			console.blit(master_console, 0, 0, 0, 0, 63, 63)

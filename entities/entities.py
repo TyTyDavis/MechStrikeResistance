@@ -14,7 +14,7 @@ def player(x, y):
         components.Player(),
         components.PlayerTurn(),
         components.Coordinates([(x,y)]),
-        components.Collision(),
+        components.Collision(with_mech=False),
         components.Description(name='player'),
         components.Render([("@", tcod.white)]),
         components.Moves(),
@@ -41,5 +41,6 @@ def mech(x, y):
         components.Size(3),
         components.Inventory(),
         components.HitPoints(hp=300, maxHP=300),
+        components.Collision()
 
     )
