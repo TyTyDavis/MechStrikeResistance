@@ -86,3 +86,7 @@ class Description:
     name: str = ""
     description: str = ""
 
+@component
+class Attack:
+    melee_damage: int = 1
+

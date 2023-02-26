@@ -1,6 +1,8 @@
 import os
 
+from esper import set_handler
 import tcod
+
 from input_handler import handle_keys
 from game_messages import MessageLog, Message
 from game_states import GameStates
@@ -14,7 +16,7 @@ from render_functions import (
 from components import components
 from entities.entity import Entity, get_blocking_entities_at_location
 from entities import entities
-from processors import processors, render_processors, input_processors, player_processor
+from processors import handlers, processors, render_processors, input_processors, player_processor
 from world import World
 
 
@@ -24,6 +26,7 @@ font_file = os.path.join(directory, 'static/cp437_16x16.png')
 PROCESSORS_LIST = [
 	input_processors.InputProcessor(),
 	player_processor.PlayerProcessor(),
+	processors.AttackProcessor(),
 	processors.MovementProcessor(), 
 	processors.MechProcessor(),
 	render_processors.CameraProcessor(), 
@@ -61,10 +64,11 @@ def main():
 		world.add_processor(render_processors.ClearProcessor(), 100)
 		for processor in PROCESSORS_LIST:
 			world.add_processor(processor)
-		world.add_processor(render_processors.MapRenderProcessor(),2)
-		world.add_processor(render_processors.EntityRenderProcessor(), 2)
-		world.add_processor(processors.MechProcessor(),1)
-		
+		world.add_processor(render_processors.MapRenderProcessor(),3)
+		world.add_processor(render_processors.EntityRenderProcessor(), 3)
+		world.add_processor(processors.MechProcessor(),2)
+		world.add_processor(handlers.EventHandler(), 1)
+
 
 		while True:
 		#game loop

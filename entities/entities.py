@@ -42,6 +42,6 @@ def mech(x, y):
         components.Size(3),
         components.Inventory(),
         components.HitPoints(hp=300, maxHP=300),
-        components.Collision()
-
+        components.Collision(),
+        components.Attack(melee_damage=5),
     )

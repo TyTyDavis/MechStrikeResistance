@@ -1,4 +1,4 @@
-from esper import Processor
+from esper import dispatch_event, Processor
 from math import floor
 import sys
 import tcod
@@ -39,8 +39,9 @@ class MovementProcessor(Processor):
                 velocity.x, velocity.y = tuple(v * moves.speed for v in (velocity.x, velocity.y))
                 
                 new_coordinates = self.move_coordinates(coordinates.coordinates, velocity.x, velocity.y)
+                
                 if target := self.get_blocking_entities_at_location(ent, new_coordinates, collision.with_mech):
-                    self.world.message_log.add_message("Attack!")
+                    self.world.events.append({"melee":{"attacker": ent, "target": target}})    
                 else:
                     coordinates.coordinates = new_coordinates
 
@@ -126,3 +127,13 @@ class Console(Processor):
 
         if self.world.action.get('exit'):
             sys.exit()
+
+class AttackProcessor(Processor):
+    def __init__(self):
+        super().__init__()
+    
+    def melee_handler(self):
+        self.world.message_log.add_message("Attack!")
+    
+    def process(self):
+        pass
