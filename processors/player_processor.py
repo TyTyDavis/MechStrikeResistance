@@ -29,6 +29,7 @@ class PlayerProcessor(Processor):
                         player.vehicle = None
                         player_move = self.world.component_for_entity(player_ent, components.Moves)
                         player_move.speed = 1
+                        player_coordinates.coordinates = [player_coordinates.coordinates[4]]
 
                         self.world.zoomed_out = False
                         self.world.camera.toggle_zoom(self.world.zoomed_out)
@@ -36,12 +37,14 @@ class PlayerProcessor(Processor):
                 for entity in player.interactables:
                     if self.world.has_component(ent, components.Mech):
                         mech = self.world.component_for_entity(ent, components.Mech)
+                        mech_coords = self.world.component_for_entity(ent, components.Coordinates)
                         if not mech.occupied: #embark
                             mech.embarked = True
                             mech.occupied = True
                             player.vehicle = entity
                             player_move = self.world.component_for_entity(player_ent, components.Moves)
                             player_move.speed = 3
+                            player_coordinates.coordinates = mech_coords.coordinates
 
                             self.world.zoomed_out = True
                             #TODO: I don't like that the player processor handles this
