@@ -42,53 +42,6 @@ class MovementProcessor(Processor):
                 velocity.y = 0
 
 
-class PlayerProcessor(Processor):
-    def __init__(self):
-        super().__init__()
-    
-    def process(self):
-        for player_ent, (player, player_coordinates) in self.world.get_components(components.Player, components.Coordinates):
-            player.interactables = []
-            for ent, (mech, coordinates) in self.world.get_components(components.Mech, components.Coordinates):
-                if do_coordinates_overlap(player_coordinates.coordinates, coordinates.coordinates):
-                    if not mech.occupied:
-                        player.interactables.append(ent)
-            if move := self.world.action.get("move"):
-                for ent, (velocity, _) in self.world.get_components(components.Velocity, components.Player):
-                        velocity.x = move[0]
-                        velocity.y = move[1]
-            
-            elif self.world.action.get("embark"):
-                for ent, mech in self.world.get_component(components.Mech):
-                    if mech.embarked: #disembark
-                        mech.embarked = False
-                        mech.occupied = False
-                        player.vehicle = None
-                        player_move = self.world.component_for_entity(player_ent, components.Moves)
-                        player_move.speed = 1
-
-                        self.world.zoomed_out = False
-                        self.world.camera.toggle_zoom(self.world.zoomed_out)
-                        player.interactables = []
-                for entity in player.interactables:
-                    if self.world.has_component(ent, components.Mech):
-                        mech = self.world.component_for_entity(ent, components.Mech)
-                        if not mech.occupied: #embark
-                            mech.embarked = True
-                            mech.occupied = True
-                            player.vehicle = entity
-                            player_move = self.world.component_for_entity(player_ent, components.Moves)
-                            player_move.speed = 3
-
-                            self.world.zoomed_out = True
-                            #TODO: I don't like that the player processor handles this
-                            # The zoom should be some sort of event that gets sent game-wide
-                            self.world.game_map.create_zoomed_out_map()
-                            self.world.camera.toggle_zoom(self.world.zoomed_out)
-            elif self.world.action.get("show_inventory"):
-                self.world.message_log.add_message("Inventory empty")
-
-
 def determine_rendered_facing(chars):
     center_char = chars[4][0]
     if center_char == Characters.UP_POINTING_TRIANGLE.value:
@@ -115,7 +68,7 @@ class MechProcessor(Processor):
         directions = [components.Directions.NORTH.value, components.Directions.EAST.value, components.Directions.SOUTH.value, components.Directions.WEST.value]
         start_index = directions.index(start)
         end_index = directions.index(end)
-        rotations = (start_index - end_index) % 4
+        rotations = (end_index - start_index) % 4
         return rotations
     
     def rotated_mech_render(self, chars, rendered_facing, true_facing):
@@ -144,10 +97,14 @@ class MechProcessor(Processor):
 
     def process(self):
         for ent, (mech, render) in self.world.get_components(components.Mech, components.Render):
+            if mech.embarked:
+                if face := self.world.action.get("face"):
+                    mech.facing = face
+            
             rendered_facing = determine_rendered_facing(render.chars)
             if rendered_facing != mech.facing:
                 render.chars = self.rotated_mech_render(render.chars, rendered_facing, mech.facing)
-
+                
 
 class Console(Processor):
     scene = None

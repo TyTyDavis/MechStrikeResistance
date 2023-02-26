@@ -14,7 +14,7 @@ from render_functions import (
 from components import components
 from entities.entity import Entity, get_blocking_entities_at_location
 from entities import entities
-from processors import processors, render_processors, input_processors
+from processors import processors, render_processors, input_processors, player_processor
 from world import World
 
 
@@ -23,7 +23,7 @@ font_file = os.path.join(directory, 'static/cp437_16x16.png')
 
 PROCESSORS_LIST = [
 	input_processors.InputProcessor(),
-	processors.PlayerProcessor(),
+	player_processor.PlayerProcessor(),
 	processors.MovementProcessor(), 
 	processors.MechProcessor(),
 	render_processors.CameraProcessor(), 
