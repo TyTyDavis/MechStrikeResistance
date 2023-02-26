@@ -33,6 +33,7 @@ class MovementProcessor(Processor):
         return new_coords
 
     def process(self):
+        player_ent, player = self.world.get_component(components.Player)[0]
         for ent, (velocity, coordinates, moves, collision) in self.world.get_components(components.Velocity, components.Coordinates, components.Moves, components.Collision):
             if velocity.x or velocity.y:
                 velocity.x, velocity.y = tuple(v * moves.speed for v in (velocity.x, velocity.y))
@@ -43,7 +44,10 @@ class MovementProcessor(Processor):
                 #else:
                 coordinates.coordinates = new_coordinates
 
-
+                if ent == player.vehicle:
+                    player_coordinates = self.world.component_for_entity(player_ent, components.Coordinates)
+                    player_coordinates.coordinates = [coordinates.coordinates[4]]
+                
                 velocity.x = 0
                 velocity.y = 0
 

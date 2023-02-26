@@ -55,5 +55,3 @@ class PlayerProcessor(Processor):
             
             elif self.world.action.get("show_inventory"):
                 self.world.message_log.add_message("Inventory empty")
-
-
