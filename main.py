@@ -76,10 +76,12 @@ def main():
 			world.process()
 			
 			player_position = world.player_coordinates()
-			
+			hps = []
+			for ent, hp in world.get_component(components.HitPoints):
+				hps.append(hp.hp)
 
 			#console.print(x=2, y=2, string="player: " + str(player_position))
-			#console.print(x=2, y=3, string="camera: " + str((world.camera.x, world.camera.y)))
+			console.print(x=2, y=3, string=str(hps))
 			console.blit(master_console, 0, 0, 0, 0, 63, 63)
 			panel.blit(master_console, 63, 0, 0, 0)
 			context.present(master_console, keep_aspect=True, align=[0.0,0.0])

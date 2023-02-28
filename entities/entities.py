@@ -9,6 +9,7 @@ simple_mech_design = [
     (Characters.LEFT_HALF_BLOCK.value,tcod.white), (Characters.UPPER_HALF_BLOCK.value,tcod.white), (Characters.RIGHT_HALF_BLOCK.value,tcod.white),
 ]
 
+
 def player(x, y):
     return (
         components.Player(),
