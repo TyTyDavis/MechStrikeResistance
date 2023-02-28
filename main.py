@@ -1,6 +1,8 @@
 import os
 
+from esper import set_handler
 import tcod
+
 from input_handler import handle_keys
 from game_messages import MessageLog, Message
 from game_states import GameStates
@@ -14,7 +16,7 @@ from render_functions import (
 from components import components
 from entities.entity import Entity, get_blocking_entities_at_location
 from entities import entities
-from processors import processors, render_processors, input_processors, player_processor
+from processors import handlers, processors, render_processors, input_processors, player_processor
 from world import World
 
 
@@ -24,6 +26,7 @@ font_file = os.path.join(directory, 'static/cp437_16x16.png')
 PROCESSORS_LIST = [
 	input_processors.InputProcessor(),
 	player_processor.PlayerProcessor(),
+	processors.AttackProcessor(),
 	processors.MovementProcessor(), 
 	processors.MechProcessor(),
 	render_processors.CameraProcessor(), 
@@ -52,15 +55,20 @@ def main():
 		player = world.create_entity()
 		for component in entities.player(20,20):
 			world.add_component(player, component)
+
+		test_mech = world.create_entity()
+		for component in entities.mech(27, 42):
+			world.add_component(test_mech, component)
 		
 
 		world.add_processor(render_processors.ClearProcessor(), 100)
 		for processor in PROCESSORS_LIST:
 			world.add_processor(processor)
-		world.add_processor(render_processors.MapRenderProcessor(),2)
-		world.add_processor(render_processors.EntityRenderProcessor(), 2)
-		world.add_processor(processors.MechProcessor(),1)
-		
+		world.add_processor(render_processors.MapRenderProcessor(),3)
+		world.add_processor(render_processors.EntityRenderProcessor(), 3)
+		world.add_processor(processors.MechProcessor(),2)
+		world.add_processor(handlers.EventHandler(), 1)
+
 
 		while True:
 		#game loop
@@ -68,10 +76,12 @@ def main():
 			world.process()
 			
 			player_position = world.player_coordinates()
-			
+			hps = []
+			for ent, hp in world.get_component(components.HitPoints):
+				hps.append(hp.hp)
 
 			#console.print(x=2, y=2, string="player: " + str(player_position))
-			#console.print(x=2, y=3, string="camera: " + str((world.camera.x, world.camera.y)))
+			console.print(x=2, y=3, string=str(hps))
 			console.blit(master_console, 0, 0, 0, 0, 63, 63)
 			panel.blit(master_console, 63, 0, 0, 0)
 			context.present(master_console, keep_aspect=True, align=[0.0,0.0])

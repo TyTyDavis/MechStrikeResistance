@@ -43,6 +43,7 @@ class World(esper.World):
         self.panel = panel
         
         self.action = {}
+        self.events = []
 
     def player_coordinates(self):
         for player, (player, coordinates) in self.get_components(components.Player, components.Coordinates):

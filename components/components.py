@@ -12,6 +12,11 @@ class Player:
 
 
 @component
+class Controlled:
+    pass
+
+
+@component
 class PlayerTurn:
     pass
 
@@ -80,4 +85,8 @@ class Velocity:
 class Description:
     name: str = ""
     description: str = ""
+
+@component
+class Attack:
+    melee_damage: int = 1
 

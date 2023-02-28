@@ -9,6 +9,7 @@ simple_mech_design = [
     (Characters.LEFT_HALF_BLOCK.value,tcod.white), (Characters.UPPER_HALF_BLOCK.value,tcod.white), (Characters.RIGHT_HALF_BLOCK.value,tcod.white),
 ]
 
+
 def player(x, y):
     return (
         components.Player(),
@@ -22,6 +23,7 @@ def player(x, y):
         components.Size(1),
         components.Inventory(money=100),
         components.HitPoints(hp=50, maxHP=50),
+        components.Controlled(),
     )
 
 def mech(x, y):
@@ -36,11 +38,11 @@ def mech(x, y):
         components.Render(simple_mech_design),
         components.RenderZoomedOut((Characters.DOWN_POINTING_TRIANGLE.value,tcod.red)),
         components.Description(name='test mech'),
-        components.Moves(),
+        components.Moves(speed=3),
         components.Velocity(),
         components.Size(3),
         components.Inventory(),
         components.HitPoints(hp=300, maxHP=300),
-        components.Collision()
-
+        components.Collision(),
+        components.Attack(melee_damage=5),
     )
