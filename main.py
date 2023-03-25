@@ -16,7 +16,7 @@ from render_functions import (
 from components import components
 from entities.entity import Entity, get_blocking_entities_at_location
 from entities import entities
-from processors import handlers, processors, render_processors, input_processors, player_processor
+from processors import add_processors, handlers, processors, render_processors, input_processors, player_processor
 from world import World
 
 
@@ -61,13 +61,7 @@ def main():
 			world.add_component(test_mech, component)
 		
 
-		world.add_processor(render_processors.ClearProcessor(), 100)
-		for processor in PROCESSORS_LIST:
-			world.add_processor(processor)
-		world.add_processor(render_processors.MapRenderProcessor(),3)
-		world.add_processor(render_processors.EntityRenderProcessor(), 3)
-		world.add_processor(processors.MechProcessor(),2)
-		world.add_processor(handlers.EventHandler(), 1)
+		add_processors(world)
 
 
 		while True:

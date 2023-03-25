@@ -74,7 +74,6 @@ class HUDProcessor(Processor):
         #messages
         y = self.world.message_log.y
         for message in self.world.message_log.messages:
-            #import pdb; pdb.set_trace()
             panel.print(x=self.world.message_log.x, y=y, string=message.text, fg=message.color)      
             y +=1
 
