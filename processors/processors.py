@@ -39,7 +39,7 @@ class MovementProcessor(Processor):
                 velocity.x, velocity.y = tuple(v * moves.speed for v in (velocity.x, velocity.y))
                 
                 new_coordinates = self.move_coordinates(coordinates.coordinates, velocity.x, velocity.y)
-                
+
                 if target := self.get_blocking_entities_at_location(ent, new_coordinates, collision.with_mech):
                     self.world.events.append({"melee":{"attacker": ent, "target": target}})    
                 else:
@@ -108,7 +108,7 @@ class MechProcessor(Processor):
 
     def process(self):
         for ent, (mech, render) in self.world.get_components(components.Mech, components.Render):
-            if mech.embarked:
+            if self.world.component_for_entity(ent, components.Controlled):
                 if face := self.world.action.get("face"):
                     mech.facing = face
             
