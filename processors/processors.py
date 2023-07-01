@@ -108,7 +108,7 @@ class MechProcessor(Processor):
 
     def process(self):
         for ent, (mech, render) in self.world.get_components(components.Mech, components.Render):
-            if self.world.component_for_entity(ent, components.Controlled):
+            if self.world.has_component(ent, components.Controlled):
                 if face := self.world.action.get("face"):
                     mech.facing = face
             

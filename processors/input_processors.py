@@ -86,6 +86,7 @@ class InputProcessor(Processor):
             Key(ch="y"): {"move": (-1, -1)},
             Key(ch="z"): {},
             Key(ch="."): {"move": (0, 0)},
+            Key(ch=","): {"pickup": True},
         }
 
     def process(self):

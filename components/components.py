@@ -28,7 +28,9 @@ class EnemyTurn:
 
 @component
 class Inventory:
+    items: list = field(default_factory=list) 
     money: int = 0
+    capacity: int = 10
 
 @component
 class HitPoints:
@@ -89,4 +91,9 @@ class Description:
 @component
 class Attack:
     melee_damage: int = 1
+
+
+@component
+class Item:
+    pass
 

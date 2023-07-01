@@ -48,6 +48,11 @@ def main():
 
 		world = World(console, panel)
 		
+		item = world.create_entity()
+		world.add_component(item, components.Coordinates([(15,15)]))
+		world.add_component(item, components.Render([("a", tcod.red)]))
+		world.add_component(item, components.Item())
+
 		mech = world.create_entity()
 		for component in entities.mech(27, 27):
 			world.add_component(mech, component)
@@ -56,9 +61,7 @@ def main():
 		for component in entities.player(20,20):
 			world.add_component(player, component)
 
-		test_mech = world.create_entity()
-		for component in entities.mech(27, 42):
-			world.add_component(test_mech, component)
+		
 		
 
 		add_processors(world)
